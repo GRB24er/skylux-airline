@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #030614;
+  --surface: #0a0f1e;
+  --surface-2: #0f1628;
+  --card: #0c1121;
+  --glass: rgba(255,255,255,0.02);
+  --glass-border: rgba(255,255,255,0.06);
+  --text: #f0f0f5;
+  --text-soft: #8892b0;
+  --text-dim: #5a6480;
+  --accent: #6366f1;
+  --accent-light: #818cf8;
+  --cyan: #22d3ee;
+  --hot: #f43f5e;
+  --emerald: #34d399;
+  --amber: #fbbf24;
+  --violet: #a78bfa;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: rgba(99,102,241,0.2); }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #141c35; border-radius: 2px; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+input::placeholder, textarea::placeholder { color: var(--text-dim); }
+input:focus, select:focus { outline: none; border-color: rgba(99,102,241,0.4); box-shadow: 0 0 0 3px rgba(99,102,241,0.08); }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes slideProgress { from { width:0; } }
+@keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+@keyframes glow { 0%,100% { opacity:0.3; } 50% { opacity:0.6; } }
