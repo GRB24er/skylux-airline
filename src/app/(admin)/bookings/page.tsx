@@ -19,6 +19,18 @@ export default function BookingsPage() {
   const load=()=>{setLoading(true);fetch("/api/bookings?limit=100").then(r=>r.json()).then(d=>{if(d.success)setBookings(d.data?.bookings||[]);}).finally(()=>setLoading(false));};
   useEffect(load,[]);
 
+  const confirmPayment=async(id:string)=>{
+    if(!confirm("Confirm this payment as received?"))return;
+    setSendingEmail(id+"pay");
+    try{
+      const res=await fetch("/api/admin/bookings/confirm-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({bookingId:id})});
+      const d=await res.json();
+      setEmailMsg(d.success?"Done: "+d.message:"Error: "+(d.error||"Failed"));
+    }catch{setEmailMsg("Error: Network error")}
+    setTimeout(()=>{setSendingEmail(null);setEmailMsg("")},3000);
+    load();
+  };
+
   const cancelBooking=async(id:string)=>{
     if(!confirm("Cancel this booking?"))return;
     await fetch("/api/bookings/cancel",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({bookingId:id,reason:"Admin cancellation"})});
@@ -93,7 +105,7 @@ export default function BookingsPage() {
                 <td style={{padding:"12px 14px"}} onClick={e=>e.stopPropagation()}>
                   <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
                   {b.status==="confirmed"&&<>{btn("Send Confirm",C.emerald,()=>sendBookingEmail(b._id,"confirmation"),sendingEmail===b._id+"confirmation")}{btn("E-Ticket",C.cyan,()=>sendBookingEmail(b._id,"eticket"),sendingEmail===b._id+"eticket")}{btn("Cancel",C.hot,()=>cancelBooking(b._id))}</>}
-                  {b.status==="pending"&&btn("Cancel",C.hot,()=>cancelBooking(b._id))}
+                  {b.status==="pending"&&<>{btn("Confirm Pay",C.emerald,()=>confirmPayment(b._id),sendingEmail===b._id+"pay")}{btn("Cancel",C.hot,()=>cancelBooking(b._id))}</>}
                   {btn("Custom Email",C.accentLight,()=>{setEmailTarget(b);setShowEmailModal(true)})}
                   </div>
                 </td>
@@ -120,6 +132,8 @@ export default function BookingsPage() {
                     <a href={"/boarding-pass/"+b.bookingReference} target="_blank" rel="noreferrer" style={{padding:"6px 14px",borderRadius:8,background:C.cyan+"15",border:"1px solid "+C.cyan+"25",color:C.cyan,fontSize:11,fontWeight:700,textDecoration:"none"}}>Boarding Pass</a>
                     {btn("Send Confirmation",C.emerald,()=>sendBookingEmail(b._id,"confirmation"),sendingEmail===b._id+"confirmation")}
                     {btn("Send E-Ticket",C.cyan,()=>sendBookingEmail(b._id,"eticket"),sendingEmail===b._id+"eticket")}
+                    {b.payment?.status!=="completed"&&btn("Confirm Payment",C.emerald,()=>confirmPayment(b._id),sendingEmail===b._id+"pay")}
+                    <a href={"/invoice/"+b.bookingReference} target="_blank" rel="noreferrer" style={{padding:"6px 14px",borderRadius:8,background:C.glassBorder,color:C.textSoft,fontSize:11,fontWeight:700,textDecoration:"none"}}>Invoice</a>
                   </div>
                 </div>
               </td></tr>):null
