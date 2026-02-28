@@ -129,27 +129,6 @@ export default function AuthPage() {
               Sign In
             </button>
 
-            {/* Quick login hints */}
-            <div style={{ marginTop: 20, padding: "14px 16px", borderRadius: 12, background: C.glass, border: `1px solid ${C.glassBorder}` }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.textDim, letterSpacing: 1, marginBottom: 8 }}>TEST ACCOUNTS</div>
-              {[
-                { role: "Admin", email: "admin@skyluxairways.com", pass: "Admin@2026!" },
-                { role: "Customer", email: "customer@test.com", pass: "Test@1234!" },
-                { role: "Pilot", email: "captain@skyluxairways.com", pass: "Pilot@2026!" },
-              ].map((acc, i) => (
-                <div key={i} onClick={() => { setLoginEmail(acc.email); setLoginPassword(acc.pass); setError(""); }} style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  padding: "6px 10px", borderRadius: 8, marginBottom: 4, cursor: "pointer",
-                  transition: "background 0.15s",
-                }}
-                  onMouseEnter={(e: any) => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
-                  onMouseLeave={(e: any) => e.currentTarget.style.background = "transparent"}
-                >
-                  <span style={{ fontSize: 11, color: C.textSoft }}>{acc.role}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: C.textDim }}>{acc.email}</span>
-                </div>
-              ))}
-            </div>
 
             <p style={{ textAlign: "center", fontSize: 13, color: C.textDim, marginTop: 24 }}>
               Don't have an account?{" "}
