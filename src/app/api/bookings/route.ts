@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
+import "@/models/Flight";
+import "@/models/Aircraft";
 
 export async function GET(req: NextRequest) {
   try {
