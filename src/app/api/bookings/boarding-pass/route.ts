@@ -2,7 +2,8 @@
 import { connectDB } from "@/lib/database";
 import Booking from "@/models/Booking";
 import Flight from "@/models/Flight";
-import "@/models/Aircraft";
+import Aircraft from "@/models/Aircraft";
+const _f = Flight; const _a = Aircraft;
 
 export async function GET(req: NextRequest) {
   try {
