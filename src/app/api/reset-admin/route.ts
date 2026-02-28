@@ -1,21 +1,19 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/database";
 import User from "@/models/User";
-import bcrypt from "bcryptjs";
 
 export async function GET() {
   try {
     await connectDB();
-    const hash = await bcrypt.hash("Admin@2026!", 12);
-    const existing = await User.findOne({ email: "admin@skyluxairways.com" });
+    const existing = await User.findOne({ email: "admin@skyluxairways.com" }).select("+password");
     if (existing) {
-      existing.password = hash;
+      existing.password = "Admin@2026!";
       await existing.save();
       return NextResponse.json({ success: true, message: "Admin password reset" });
     }
     await User.create({
       email: "admin@skyluxairways.com",
-      password: hash,
+      password: "Admin@2026!",
       firstName: "System",
       lastName: "Admin",
       role: "admin",
