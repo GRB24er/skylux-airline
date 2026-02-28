@@ -3,63 +3,71 @@ import { connectDB } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 import Flight from "@/models/Flight";
+import Aircraft from "@/models/Aircraft";
 import User from "@/models/User";
 import { generateBookingReference, calculatePriceBreakdown, calculatePointsEarned } from "@/utils/helpers";
 import { sendEmail, bookingConfirmationEmail } from "@/services/email";
-import "@/models/Aircraft";
 
 export async function POST(req: NextRequest) {
   try {
     const authResult = await authenticateUser(req);
     if ("error" in authResult) return authResult.error;
-
     await connectDB();
     const body = await req.json();
-    const { flightIds, passengers, cabinClass, contactEmail, contactPhone, addOns, paymentMethod, promoCode, useLoyaltyPoints } = body;
-
+    const { flightIds, passengers, cabinClass, contactEmail, contactPhone, addOns, paymentMethod, useLoyaltyPoints } = body;
     if (!flightIds?.length || !passengers?.length || !cabinClass || !contactEmail || !contactPhone || !paymentMethod) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // Fetch flights - handle both real DB flights and generated flights
     const realIds: string[] = [];
     const generatedIds: string[] = [];
     for (const id of flightIds) {
-      if (typeof id === "string" && id.startsWith("gen_")) {
-        generatedIds.push(id);
-      } else {
-        realIds.push(id);
-      }
+      if (typeof id === "string" && id.startsWith("gen_")) generatedIds.push(id);
+      else realIds.push(id);
     }
 
     let flights: any[] = [];
-
-    // Fetch real DB flights
     if (realIds.length > 0) {
       const dbFlights = await Flight.find({ _id: { $in: realIds }, isActive: true });
       flights.push(...dbFlights);
     }
 
-    // Handle generated flights - save them to DB first
     if (generatedIds.length > 0) {
+      // Get or create a default aircraft for generated flights
+      let defaultAircraft = await Aircraft.findOne({ registration: "SX-GEN-001" });
+      if (!defaultAircraft) {
+        defaultAircraft = await Aircraft.create({
+          registration: "SX-GEN-001", name: "Boeing 787-9 Dreamliner", manufacturer: "Boeing", model: "787-9",
+          category: "commercial-widebody", type: "commercial", status: "active",
+          specs: { maxPassengers: 290, maxRange: 7635, cruiseSpeed: 488 },
+          seatConfiguration: [
+            { class: "economy", seats: 198, layout: "3-3-3", pitch: "32 inches", features: ["USB","IFE"] },
+            { class: "premium", seats: 42, layout: "2-3-2", pitch: "38 inches", features: ["USB","IFE","Legrest"] },
+            { class: "business", seats: 36, layout: "1-2-1", pitch: "60 inches", features: ["Lie-flat","Lounge"] },
+            { class: "first", seats: 14, layout: "1-1-1", pitch: "82 inches", features: ["Suite","Shower"] },
+          ],
+          amenities: ["Wi-Fi","IFE","USB"], yearManufactured: 2022, totalFlightHours: 4800, homeBase: "LHR", isAvailable: true,
+        });
+      }
+
       for (const genId of generatedIds) {
-        // Parse: gen_FROM_TO_DATE_INDEX
         const parts = genId.split("_");
         if (parts.length >= 5) {
           const fromCode = parts[1];
           const toCode = parts[2];
           const date = parts[3];
           const idx = parseInt(parts[4]);
-
-          // Regenerate using same logic as search
-          const genFlights = generateFlightsForBooking(fromCode, toCode, date);
-          const targetFlight = genFlights[idx];
-          if (targetFlight) {
-            // Remove the fake _id and save to DB
-            delete targetFlight._id;
-            delete targetFlight._generated;
-            const saved = await Flight.create(targetFlight);
-            flights.push(saved);
+          const genFlights = generateFlightsForBooking(fromCode, toCode, date, defaultAircraft._id);
+          const target = genFlights[idx];
+          if (target) {
+            // Check if flight number already exists
+            const existing = await Flight.findOne({ flightNumber: target.flightNumber });
+            if (existing) {
+              flights.push(existing);
+            } else {
+              const saved = await Flight.create(target);
+              flights.push(saved);
+            }
           }
         }
       }
@@ -69,124 +77,97 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "No valid flights found" }, { status: 404 });
     }
 
-    // Check seat availability
     for (const flight of flights) {
       const seatConfig = flight.seatMap.find((s: any) => s.class === cabinClass);
       if (!seatConfig || seatConfig.availableSeats < passengers.length) {
-        return NextResponse.json({
-          success: false,
-          error: `Not enough seats in ${cabinClass} class on flight ${flight.flightNumber}`,
-        }, { status: 400 });
+        return NextResponse.json({ success: false, error: `Not enough seats in ${cabinClass} on ${flight.flightNumber}` }, { status: 400 });
       }
     }
 
-    // Calculate pricing
     const baseFarePerPerson = flights.reduce((sum: number, f: any) => {
       const seat = f.seatMap.find((s: any) => s.class === cabinClass);
       return sum + (seat?.price || 0);
     }, 0);
-
     const breakdown = calculatePriceBreakdown(baseFarePerPerson, passengers.length, 0, useLoyaltyPoints || 0);
 
-    // Generate unique booking reference
     let bookingRef: string;
     let refExists = true;
-    do {
-      bookingRef = generateBookingReference();
-      refExists = !!(await Booking.findOne({ bookingReference: bookingRef }));
-    } while (refExists);
+    do { bookingRef = generateBookingReference(); refExists = !!(await Booking.findOne({ bookingReference: bookingRef })); } while (refExists);
 
-    // Create booking
     const booking = await Booking.create({
-      bookingReference: bookingRef,
-      user: authResult.user._id,
-      flights: flights.map((f: any, i: number) => ({
-        flight: f._id,
-        direction: i === 0 ? "outbound" : "return",
-      })),
+      bookingReference: bookingRef, user: authResult.user._id,
+      flights: flights.map((f: any, i: number) => ({ flight: f._id, direction: i === 0 ? "outbound" : "return" })),
       passengers: passengers.map((p: any) => ({ ...p, cabinClass })),
-      cabinClass,
-      status: "pending",
-      payment: {
-        status: "pending",
-        method: paymentMethod,
-        amount: breakdown.total,
-        currency: "USD",
-        breakdown,
-      },
-      addOns: addOns || {},
-      contactEmail,
-      contactPhone,
+      cabinClass, status: "pending",
+      payment: { status: "pending", method: paymentMethod, amount: breakdown.total, currency: "USD", breakdown },
+      addOns: addOns || {}, contactEmail, contactPhone,
       loyaltyPointsEarned: calculatePointsEarned(breakdown.total),
     });
 
-    // Update seat availability
     for (const flight of flights) {
       const seatIdx = flight.seatMap.findIndex((s: any) => s.class === cabinClass);
-      if (seatIdx >= 0) {
-        flight.seatMap[seatIdx].availableSeats -= passengers.length;
-        await flight.save();
-      }
+      if (seatIdx >= 0) { flight.seatMap[seatIdx].availableSeats -= passengers.length; await flight.save(); }
     }
 
-    // Simulate payment success
     booking.payment.status = "completed";
     booking.payment.paidAt = new Date();
     booking.payment.transactionId = "TXN-" + Date.now().toString(36).toUpperCase();
     booking.status = "confirmed";
     await booking.save();
 
-    // Award loyalty points
     const user = await User.findById(authResult.user._id);
-    if (user) {
-      user.loyaltyPoints += booking.loyaltyPointsEarned;
-      user.totalFlights += 1;
-      user.totalSpent += breakdown.total;
-      await user.save();
-    }
+    if (user) { user.loyaltyPoints += booking.loyaltyPointsEarned; user.totalFlights += 1; user.totalSpent += breakdown.total; await user.save(); }
 
-    // Send confirmation email
-    const primaryFlight = flights[0];
+    const pf = flights[0];
     try {
       await sendEmail({
-        to: contactEmail,
-        subject: `SKYLUX Airways - Booking Confirmed ${bookingRef}`,
+        to: contactEmail, subject: `SKYLUX Airways - Booking Confirmed ${bookingRef}`,
         html: bookingConfirmationEmail({
-          name: `${passengers[0].firstName} ${passengers[0].lastName}`,
-          bookingRef,
-          flightNumber: primaryFlight.flightNumber,
-          from: `${primaryFlight.departure.city} (${primaryFlight.departure.airportCode})`,
-          to: `${primaryFlight.arrival.city} (${primaryFlight.arrival.airportCode})`,
-          date: new Date(primaryFlight.departure.scheduledTime).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
+          name: `${passengers[0].firstName} ${passengers[0].lastName}`, bookingRef,
+          flightNumber: pf.flightNumber,
+          from: `${pf.departure.city} (${pf.departure.airportCode})`,
+          to: `${pf.arrival.city} (${pf.arrival.airportCode})`,
+          date: new Date(pf.departure.scheduledTime).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
           cabin: cabinClass.charAt(0).toUpperCase() + cabinClass.slice(1),
           total: `$${breakdown.total.toLocaleString()}`,
         }),
       });
-      booking.eTicketSent = true;
-      await booking.save();
-    } catch (emailError) {
-      console.error("Confirmation email failed:", emailError);
-    }
+      booking.eTicketSent = true; await booking.save();
+    } catch (e) { console.error("Email failed:", e); }
 
-    // Populate and return
-    const populatedBooking = await Booking.findById(booking._id)
+    const populated = await Booking.findById(booking._id)
       .populate({ path: "flights.flight", select: "flightNumber departure arrival duration status aircraft" })
-      .populate("user", "firstName lastName email")
-      .lean();
+      .populate("user", "firstName lastName email").lean();
 
-    return NextResponse.json({
-      success: true,
-      data: { booking: populatedBooking },
-      message: `Booking ${bookingRef} confirmed successfully`,
-    }, { status: 201 });
-
+    return NextResponse.json({ success: true, data: { booking: populated }, message: `Booking ${bookingRef} confirmed` }, { status: 201 });
   } catch (error: any) {
-    console.error("Booking creation error:", error);
+    console.error("Booking error:", error);
     return NextResponse.json({ success: false, error: error.message || "Booking failed" }, { status: 500 });
   }
 }
 
-// -- Flight generation (mirrors search API logic) --
+const TZ: Record<string,string> = {
+  LHR:"Europe/London",CDG:"Europe/Paris",FRA:"Europe/Berlin",AMS:"Europe/Amsterdam",DXB:"Asia/Dubai",
+  JFK:"America/New_York",LAX:"America/Los_Angeles",SIN:"Asia/Singapore",HKG:"Asia/Hong_Kong",NRT:"Asia/Tokyo",
+  SYD:"Australia/Sydney",ACC:"Africa/Accra",LOS:"Africa/Lagos",NBO:"Africa/Nairobi",JNB:"Africa/Johannesburg",
+  CAI:"Africa/Cairo",IST:"Europe/Istanbul",BCN:"Europe/Madrid",MAD:"Europe/Madrid",FCO:"Europe/Rome",
+  MXP:"Europe/Rome",BOM:"Asia/Kolkata",DEL:"Asia/Kolkata",BKK:"Asia/Bangkok",ICN:"Asia/Seoul",
+  GRU:"America/Sao_Paulo",MEX:"America/Mexico_City",YYZ:"America/Toronto",MIA:"America/New_York",
+  ORD:"America/Chicago",SFO:"America/Los_Angeles",ATL:"America/New_York",DFW:"America/Chicago",
+  SEA:"America/Los_Angeles",DOH:"Asia/Qatar",KUL:"Asia/Kuala_Lumpur",CPT:"Africa/Johannesburg",
+  ARN:"Europe/Stockholm",OSL:"Europe/Oslo",CPH:"Europe/Copenhagen",HEL:"Europe/Helsinki",
+  ZRH:"Europe/Zurich",VIE:"Europe/Vienna",LIS:"Europe/Lisbon",ATH:"Europe/Athens",
+  MLE:"Indian/Maldives",CMN:"Africa/Casablanca",ADD:"Africa/Addis_Ababa",CUN:"America/Cancun",
+  PVG:"Asia/Shanghai",BER:"Europe/Berlin",MUC:"Europe/Berlin",DUB:"Europe/Dublin",
+  EZE:"America/Argentina/Buenos_Aires",SCL:"America/Santiago",LIM:"America/Lima",BOG:"America/Bogota",
+  MEL:"Australia/Melbourne",AKL:"Pacific/Auckland",PEK:"Asia/Shanghai",TPE:"Asia/Taipei",
+  CGK:"Asia/Jakarta",DPS:"Asia/Makassar",HND:"Asia/Tokyo",BNE:"Australia/Brisbane",PER:"Australia/Perth",
+  WAW:"Europe/Warsaw",PRG:"Europe/Prague",BUD:"Europe/Budapest",DAR:"Africa/Dar_es_Salaam",
+  MRU:"Indian/Mauritius",RUH:"Asia/Riyadh",JED:"Asia/Riyadh",AUH:"Asia/Dubai",MCT:"Asia/Muscat",
+  AMM:"Asia/Amman",BEY:"Asia/Beirut",KWI:"Asia/Kuwait",ISB:"Asia/Karachi",BLR:"Asia/Kolkata",
+  CMB:"Asia/Colombo",SGN:"Asia/Ho_Chi_Minh",MNL:"Asia/Manila",
+};
+
 const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   LHR:{c:"London",co:"United Kingdom",la:51.47,lo:-0.46,n:"Heathrow"},
   CDG:{c:"Paris",co:"France",la:49.01,lo:2.55,n:"Charles de Gaulle"},
@@ -281,7 +262,7 @@ function dist(a1:number,o1:number,a2:number,o2:number){
 
 function sRng(s:string){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return()=>{h=(h*16807)%2147483647;return(h&0x7fffffff)/2147483647}}
 
-function generateFlightsForBooking(fc:string,tc:string,ds:string){
+function generateFlightsForBooking(fc:string,tc:string,ds:string,aircraftId:any){
   const f=AP[fc],t=AP[tc];if(!f||!t||fc===tc)return[];
   const nm=dist(f.la,f.lo,t.la,t.lo);
   const dur=Math.round((nm/450)*60)+30;
@@ -297,29 +278,26 @@ function generateFlightsForBooking(fc:string,tc:string,ds:string){
   const d=new Date(ds);if(isNaN(d.getTime()))return[];
   const n=Math.min(6,Math.max(3,3+Math.round(r()*3)));
   const wins=[{h:6,m:10},{h:8,m:40},{h:11,m:5},{h:14,m:20},{h:17,m:45},{h:21,m:10},{h:23,m:50}];
-  const ac=[
-    {nm:"Boeing 787-9 Dreamliner",mf:"Boeing",md:"787-9",ct:"widebody"},
-    {nm:"Airbus A350-900",mf:"Airbus",md:"A350-900",ct:"widebody"},
-  ];
+  const ftz=TZ[fc]||"UTC",ttz=TZ[tc]||"UTC";
   const out=[];
   for(let i=0;i<n;i++){
     const w=wins[i%wins.length];
     const dep=new Date(d);dep.setHours(w.h,w.m+Math.round(r()*15),0,0);
     const arr=new Date(dep.getTime()+dur*60000);
-    const a=ac[i%ac.length];
     const pm=0.88+r()*0.28;
     const ec=Math.round(eB*pm/5)*5,pe=Math.round(ec*1.45/5)*5,bz=Math.round(bB*pm/5)*5,fi=Math.round(fB*pm/5)*5;
-    const fn=`SLX${String(100+Math.round(r()*899))}`;
+    const fn=`SX ${String(100+Math.round(r()*899))}`;
     out.push({
-      flightNumber:fn,type:"commercial",isActive:true,
-      departure:{airportCode:fc,airport:f.n,city:f.c,country:f.co,terminal:`T${1+Math.round(r()*3)}`,gate:`${String.fromCharCode(65+Math.round(r()*5))}${1+Math.round(r()*30)}`,scheduledTime:dep.toISOString()},
-      arrival:{airportCode:tc,airport:t.n,city:t.c,country:t.co,terminal:`T${1+Math.round(r()*2)}`,gate:`${String.fromCharCode(65+Math.round(r()*5))}${1+Math.round(r()*30)}`,scheduledTime:arr.toISOString()},
+      flightNumber:fn,type:"commercial" as const,airline:"SKYLUX Airways",isActive:true,
+      aircraft:aircraftId,
+      departure:{airport:f.n,airportCode:fc,city:f.c,country:f.co,terminal:`T${1+Math.round(r()*3)}`,gate:`${String.fromCharCode(65+Math.round(r()*5))}${1+Math.round(r()*30)}`,scheduledTime:dep,timezone:ftz},
+      arrival:{airport:t.n,airportCode:tc,city:t.c,country:t.co,terminal:`T${1+Math.round(r()*2)}`,gate:`${String.fromCharCode(65+Math.round(r()*5))}${1+Math.round(r()*30)}`,scheduledTime:arr,timezone:ttz},
       duration:dur,distance:nm,status:"scheduled",stops:0,
       seatMap:[
-        {class:"economy",price:ec,availableSeats:100+Math.round(r()*80),totalSeats:200},
-        {class:"premium-economy",price:pe,availableSeats:15+Math.round(r()*20),totalSeats:40},
-        {class:"business",price:bz,availableSeats:6+Math.round(r()*18),totalSeats:28},
-        {class:"first",price:fi,availableSeats:2+Math.round(r()*6),totalSeats:8},
+        {class:"economy",price:ec,availableSeats:100+Math.round(r()*80),totalSeats:198,rows:33,seatsPerRow:6,layout:"3-3-3"},
+        {class:"premium",price:pe,availableSeats:15+Math.round(r()*20),totalSeats:42,rows:7,seatsPerRow:6,layout:"2-3-2"},
+        {class:"business",price:bz,availableSeats:6+Math.round(r()*18),totalSeats:36,rows:9,seatsPerRow:4,layout:"1-2-1"},
+        {class:"first",price:fi,availableSeats:2+Math.round(r()*6),totalSeats:14,rows:7,seatsPerRow:2,layout:"1-1"},
       ],
     });
   }
