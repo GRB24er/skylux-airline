@@ -149,6 +149,7 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   CMB:{c:"Colombo",co:"Sri Lanka",la:7.18,lo:79.88,n:"Bandaranaike"},
   SGN:{c:"Ho Chi Minh City",co:"Vietnam",la:10.82,lo:106.65,n:"Tan Son Nhat"},
   MNL:{c:"Manila",co:"Philippines",la:14.51,lo:121.02,n:"Ninoy Aquino"},
+  ISW:{c:"Woodruff",co:"USA",la:45.9293,lo:-89.8410,n:"Sawyer County"},
   // Michigan
   DTW:{c:"Detroit",co:"USA",la:42.21,lo:-83.35,n:"Detroit Metro"},
   MQT:{c:"Marquette",co:"USA",la:46.3536,lo:-87.3953,n:"Sawyer International"},
