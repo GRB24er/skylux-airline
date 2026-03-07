@@ -269,7 +269,7 @@ function genFlights(fc:string,tc:string,ds:string){
         {class:"economy",price:ec,availableSeats:100+Math.round(r()*80),totalSeats:200},
         {class:"premium",price:pe,availableSeats:15+Math.round(r()*20),totalSeats:40},
         {class:"business",price:bz,availableSeats:6+Math.round(r()*18),totalSeats:28},
-        {class:"first",price:fi,availableSeats:2+Math.round(r()*6),totalSeats:8},
+        {class:"first",price:fi,availableSeats:6+Math.round(r()*8),totalSeats:8},
       ],
       stops:0,isActive:true,_generated:true,
     });

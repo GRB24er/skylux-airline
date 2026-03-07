@@ -219,7 +219,7 @@ function generateFlightsForBooking(fc:string,tc:string,ds:string,aircraftId:any)
         {class:"economy",price:ec,availableSeats:100+Math.round(r()*80),totalSeats:198,rows:33,seatsPerRow:6,layout:"3-3-3"},
         {class:"premium",price:pe,availableSeats:15+Math.round(r()*20),totalSeats:42,rows:7,seatsPerRow:6,layout:"2-3-2"},
         {class:"business",price:bz,availableSeats:6+Math.round(r()*18),totalSeats:36,rows:9,seatsPerRow:4,layout:"1-2-1"},
-        {class:"first",price:fi,availableSeats:2+Math.round(r()*6),totalSeats:14,rows:7,seatsPerRow:2,layout:"1-1"},
+        {class:"first",price:fi,availableSeats:6+Math.round(r()*8),totalSeats:14,rows:7,seatsPerRow:2,layout:"1-1"},
       ],
     });
   }
