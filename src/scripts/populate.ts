@@ -5,20 +5,20 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://goodnews123er:uwsaRZdpRbC4xVFQ@love.rwdzi0p.mongodb.net/skylux-airways?appName=Love";
 
 async function run() {
-  console.log("\nÃ°Å¸Å¡â‚¬ SKYLUX Airways Ã¢â‚¬â€ Full Global Network Population\n");
+  console.log("\nÃƒÂ°Ã…Â¸Ã…Â¡Ã¢â€šÂ¬ SKYLUX Airways ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Full Global Network Population\n");
   await mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 15000 });
-  console.log("Ã¢Å“â€¦ Connected to MongoDB\n");
+  console.log("ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Connected to MongoDB\n");
   const db = mongoose.connection.db!;
 
   // WIPE
-  console.log("Ã°Å¸â€”â€˜  Clearing old data...");
+  console.log("ÃƒÂ°Ã…Â¸Ã¢â‚¬â€Ã¢â‚¬Ëœ  Clearing old data...");
   await db.collection("flights").deleteMany({});
   await db.collection("aircrafts").deleteMany({});
   // Drop old indexes that might conflict
   try { await db.collection("flights").dropIndexes(); } catch(e) {}
   try { await db.collection("aircrafts").dropIndexes(); } catch(e) {}
 
-  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â AIRCRAFT Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+  // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â AIRCRAFT ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
   const aircraftDocs = [
     { name:"Boeing 787-9 Dreamliner", manufacturer:"Boeing", model:"787-9", type:"commercial", category:"commercial-widebody", registration:"SX-789-01", homeBase:"LHR", yearManufactured:2022, totalFlightHours:8420, specs:{maxPassengers:290,maxRange:7635,cruiseSpeed:490,ceilingAltitude:43000}, amenities:["Wi-Fi","IFE","USB Charging","Lie-Flat Business","First Class Suite"], hourlyRate:8500, status:"active", isAvailable:true, images:[], seatConfiguration:[], createdAt:new Date(), updatedAt:new Date() },
     { name:"Boeing 787-9 Dreamliner II", manufacturer:"Boeing", model:"787-9", type:"commercial", category:"commercial-widebody", registration:"SX-789-02", homeBase:"JFK", yearManufactured:2023, totalFlightHours:4100, specs:{maxPassengers:290,maxRange:7635,cruiseSpeed:490,ceilingAltitude:43000}, amenities:["Wi-Fi","IFE","USB Charging","Lie-Flat Business","First Class Suite"], hourlyRate:8500, status:"active", isAvailable:true, images:[], seatConfiguration:[], createdAt:new Date(), updatedAt:new Date() },
@@ -37,9 +37,9 @@ async function run() {
   const acResult = await db.collection("aircrafts").insertMany(aircraftDocs);
   const a = Object.values(acResult.insertedIds);
   const [B789,B789B,B789C,A350,A350B,B777,B777B,A321,A321B,A321C,G700,G750] = a;
-  console.log(`Ã¢Å“â€¦ ${a.length} aircraft inserted\n`);
+  console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ ${a.length} aircraft inserted\n`);
 
-  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â AIRPORTS Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+  // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â AIRPORTS ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
   const AP: Record<string, {city:string,country:string,airport:string,terminal:string}> = {
     // UK
     LHR: {city:"London",country:"United Kingdom",airport:"Heathrow Airport",terminal:"T5"},
@@ -110,19 +110,19 @@ async function run() {
     SYD: {city:"Sydney",country:"Australia",airport:"Kingsford Smith Airport",terminal:"T1"},
     MEL: {city:"Melbourne",country:"Australia",airport:"Melbourne Airport",terminal:"T2"},
     AKL: {city:"Auckland",country:"New Zealand",airport:"Auckland Airport",terminal:"TI"},
-    MLE: {city:"MalÃƒÂ©",country:"Maldives",airport:"Velana International",terminal:"T1"},
+    MLE: {city:"MalÃƒÆ’Ã‚Â©",country:"Maldives",airport:"Velana International",terminal:"T1"},
     // South America
-    GRU: {city:"SÃƒÂ£o Paulo",country:"Brazil",airport:"Guarulhos International",terminal:"T3"},
+    GRU: {city:"SÃƒÆ’Ã‚Â£o Paulo",country:"Brazil",airport:"Guarulhos International",terminal:"T3"},
     EZE: {city:"Buenos Aires",country:"Argentina",airport:"Ministro Pistarini",terminal:"T1"},
-    BOG: {city:"BogotÃƒÂ¡",country:"Colombia",airport:"El Dorado International",terminal:"T1"},
-    SCL: {city:"Santiago",country:"Chile",airport:"Arturo Merino BenÃƒÂ­tez",terminal:"T1"},
+    BOG: {city:"BogotÃƒÆ’Ã‚Â¡",country:"Colombia",airport:"El Dorado International",terminal:"T1"},
+    SCL: {city:"Santiago",country:"Chile",airport:"Arturo Merino BenÃƒÆ’Ã‚Â­tez",terminal:"T1"},
     // Caribbean
     NAS: {city:"Nassau",country:"Bahamas",airport:"Lynden Pindling International",terminal:"T1"},
     // Private jet airports
     TEB: {city:"New York",country:"United States",airport:"Teterboro Airport",terminal:"VIP"},
     VNY: {city:"Los Angeles",country:"United States",airport:"Van Nuys Airport",terminal:"VIP"},
     OPF: {city:"Miami",country:"United States",airport:"Opa-Locka Executive",terminal:"VIP"},
-    NCE: {city:"Nice",country:"France",airport:"CÃƒÂ´te d'Azur Airport",terminal:"VIP"},
+    NCE: {city:"Nice",country:"France",airport:"CÃƒÆ’Ã‚Â´te d'Azur Airport",terminal:"VIP"},
     MXP: {city:"Milan",country:"Italy",airport:"Malpensa Airport",terminal:"VIP"},
     IBZ: {city:"Ibiza",country:"Spain",airport:"Ibiza Airport",terminal:"VIP"},
     GVA: {city:"Geneva",country:"Switzerland",airport:"Geneva Airport",terminal:"VIP"},
@@ -130,13 +130,13 @@ async function run() {
     LAS: {city:"Las Vegas",country:"United States",airport:"Henderson Executive",terminal:"VIP"},
   };
 
-  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â ROUTE DEFINITIONS Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+  // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â ROUTE DEFINITIONS ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
   // [from, to, aircraft, type, duration, distance, stops, eco, prem, biz, first, depHour, flightNumBase, daysOfWeek]
   // daysOfWeek: 0=daily, [1,3,5]=Mon/Wed/Fri, etc.
   type Route = [string,string,any,string,number,number,number,number,number,number,number,number,string,number[]];
 
   const routes: Route[] = [
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â EUROPE SHORT-HAUL (A321neo from LHR) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â EUROPE SHORT-HAUL (A321neo from LHR) ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","CDG",A321,"commercial",80,190,0,89,210,580,0,7,"SX 1",[0]],        // daily
     ["CDG","LHR",A321,"commercial",80,190,0,89,210,580,0,18,"SX 2",[0]],
     ["LHR","AMS",A321,"commercial",75,200,0,95,230,620,0,7,"SX 3",[0]],
@@ -158,7 +158,7 @@ async function run() {
     ["LGW","BCN",A321,"commercial",135,712,0,115,310,760,0,6,"SX 19",[2,4,6]],
     ["BCN","LGW",A321,"commercial",135,712,0,115,310,760,0,14,"SX 20",[2,4,6]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GULF SHORT-HAUL (A321neo II from DXB) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â GULF SHORT-HAUL (A321neo II from DXB) ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["DXB","BAH",A321B,"commercial",50,160,0,78,175,390,0,8,"SX 21",[0]],
     ["DXB","DOH",A321B,"commercial",55,190,0,82,195,420,0,14,"SX 22",[0]],
     ["DXB","MCT",A321B,"commercial",65,210,0,72,165,380,0,10,"SX 23",[0]],
@@ -166,7 +166,7 @@ async function run() {
     ["DXB","CAI",A321B,"commercial",270,1500,0,195,460,1080,0,9,"SX 25",[1,3,5,7]],
     ["CAI","DXB",A321B,"commercial",250,1500,0,195,460,1080,0,15,"SX 26",[2,4,6,1]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â US DOMESTIC (A321neo III from JFK) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â US DOMESTIC (A321neo III from JFK) ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["JFK","MIA",A321C,"commercial",195,1089,0,129,310,780,0,7,"SX 27",[0]],
     ["MIA","JFK",A321C,"commercial",185,1089,0,129,310,780,0,18,"SX 28",[0]],
     ["JFK","ORD",A321C,"commercial",165,740,0,98,240,590,0,9,"SX 29",[0]],
@@ -185,7 +185,7 @@ async function run() {
     ["MIA","ATL",A321C,"commercial",120,594,0,82,200,490,0,8,"SX 42",[1,4,6]],
     ["LAX","DFW",A321C,"commercial",195,1235,0,109,265,650,0,13,"SX 43",[2,5,7]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â TRANSATLANTIC (B787-9 / A350 / B777) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â TRANSATLANTIC (B787-9 / A350 / B777) ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","JFK",B789,"commercial",440,3459,0,485,1280,3350,6400,10,"SX 50",[0]],
     ["JFK","LHR",B789,"commercial",405,3459,0,485,1280,3350,6400,19,"SX 51",[0]],
     ["LHR","LAX",A350,"commercial",660,5456,0,578,1440,3680,6950,14,"SX 52",[0]],
@@ -203,7 +203,7 @@ async function run() {
     ["CDG","JFK",B789B,"commercial",510,3625,0,490,1280,3360,6400,10,"SX 64",[0]],
     ["JFK","FRA",B789B,"commercial",465,3857,0,510,1340,3480,6600,17,"SX 65",[1,3,5]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â MIDDLE EAST LONG-HAUL Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â MIDDLE EAST LONG-HAUL ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","DXB",B789C,"commercial",380,2990,0,425,1050,2780,5480,8,"SX 70",[0]],
     ["DXB","LHR",B789C,"commercial",400,2990,0,425,1050,2780,5480,2,"SX 71",[0]],
     ["DXB","JFK",B777,"commercial",835,6846,0,645,1520,3780,8200,3,"SX 72",[0]],
@@ -212,7 +212,7 @@ async function run() {
     ["DXB","SFO",B777,"commercial",980,8103,0,710,1720,4200,9000,10,"SX 75",[2,5]],
     ["DXB","ORD",B777,"commercial",850,7240,0,660,1580,3880,8400,8,"SX 76",[3,7]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â ASIA-PACIFIC Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â ASIA-PACIFIC ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","NRT",B789,"commercial",690,5246,0,720,1740,4080,8600,21,"SX 80",[1,3,5,7]],
     ["NRT","LHR",B789,"commercial",720,5246,0,720,1740,4080,8600,11,"SX 81",[2,4,6,1]],
     ["LHR","SIN",A350,"commercial",750,5963,0,650,1560,3850,7500,22,"SX 82",[0]],
@@ -245,7 +245,7 @@ async function run() {
     ["SFO","ICN",B777B,"commercial",720,5600,0,700,1700,4100,8600,14,"SXA 09",[2,5]],
     ["DXB","PEK",B777,"commercial",480,3580,0,420,1020,2540,5100,8,"SXA 10",[1,4]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â AFRICA Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â AFRICA ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","JNB",B777,"commercial",660,5620,0,580,1420,3500,7200,19,"SXA 20",[1,3,5,7]],
     ["JNB","LHR",B777,"commercial",690,5620,0,580,1420,3500,7200,18,"SXA 21",[2,4,6,1]],
     ["LHR","NBO",B789,"commercial",510,4240,0,480,1180,2950,5900,22,"SXA 22",[2,5,7]],
@@ -258,7 +258,7 @@ async function run() {
     ["JFK","LOS",B777B,"commercial",660,5350,0,540,1320,3350,6800,22,"SXA 29",[2,6]],
     ["JFK","ACC",B789B,"commercial",620,5100,0,520,1280,3200,6500,23,"SXA 30",[1,4]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â OCEANIA Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â OCEANIA ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","SYD",B777,"commercial",1380,9188,1,845,2020,4480,9500,20,"SXA 40",[1,3,5]],
     ["SYD","LHR",B777,"commercial",1410,9188,1,845,2020,4480,9500,16,"SXA 41",[2,4,6]],
     ["LHR","MLE",A350,"commercial",630,4600,0,680,1680,3980,7900,9,"SXA 42",[1,4,7]],
@@ -272,7 +272,7 @@ async function run() {
     ["LAX","SYD",B777B,"commercial",900,6516,0,780,1880,4400,9200,22,"SXA 50",[1,4]],
     ["LAX","AKL",B777B,"commercial",780,5685,0,720,1740,4120,8600,23,"SXA 51",[3,6]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â SOUTH AMERICA Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â SOUTH AMERICA ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     ["LHR","GRU",B777,"commercial",710,5890,0,620,1520,3750,7600,22,"SXA 60",[1,4,7]],
     ["GRU","LHR",B777,"commercial",680,5890,0,620,1520,3750,7600,22,"SXA 61",[2,5,1]],
     ["LHR","EZE",B789,"commercial",820,6910,0,750,1820,4350,9100,23,"SXA 62",[3,6]],
@@ -285,7 +285,7 @@ async function run() {
     ["JFK","BOG",B789B,"commercial",350,2490,0,280,680,1720,3500,18,"SXA 69",[2,5]],
     ["LHR","SCL",B777,"commercial",870,7250,1,780,1880,4500,9400,22,"SXA 70",[2,6]],
 
-    // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â PRIVATE JETS (weekly, various dates) Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+    // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â PRIVATE JETS (weekly, various dates) ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
     // Europe
     ["LHR","NCE",G700,"private-jet",110,640,0,0,0,0,22900,10,"SXP 01",[1,3,5]],
     ["LHR","MXP",G700,"private-jet",120,580,0,0,0,0,25000,14,"SXP 02",[2,4,6]],
@@ -306,9 +306,60 @@ async function run() {
     ["TEB","LAX",G700,"private-jet",310,2475,0,0,0,0,64600,8,"SXP 14",[1,3,5]],
     ["DWC","SIN",G750,"private-jet",430,3200,0,0,0,0,84600,9,"SXP 15",[2,6]],
     ["LHR","NRT",G700,"private-jet",690,5246,0,0,0,0,143800,20,"SXP 16",[4]],
+
+    // MICHIGAN DOMESTIC & CONNECTIONS
+    ["JFK","DTW",A321C,"commercial",120,509,0,128,310,780,0,7,"SXM 01",[0]],
+    ["DTW","JFK",A321C,"commercial",130,509,0,128,310,780,0,16,"SXM 02",[0]],
+    ["ORD","DTW",A321,"commercial",75,235,0,89,220,540,0,8,"SXM 03",[0]],
+    ["DTW","ORD",A321,"commercial",80,235,0,89,220,540,0,17,"SXM 04",[0]],
+    ["DTW","MQT",A321B,"commercial",80,370,0,98,240,580,0,9,"SXM 05",[1,3,5,7]],
+    ["MQT","DTW",A321B,"commercial",85,370,0,98,240,580,0,15,"SXM 06",[1,3,5,7]],
+    ["DTW","GRR",A321,"commercial",55,120,0,78,190,460,0,8,"SXM 07",[0]],
+    ["GRR","DTW",A321,"commercial",55,120,0,78,190,460,0,17,"SXM 08",[0]],
+    ["DTW","TVC",A321B,"commercial",65,210,0,88,215,520,0,10,"SXM 09",[1,3,5,7]],
+    ["TVC","DTW",A321B,"commercial",65,210,0,88,215,520,0,16,"SXM 10",[1,3,5,7]],
+    ["DTW","FNT",A321,"commercial",40,60,0,68,165,390,0,9,"SXM 11",[1,3,5]],
+    ["FNT","DTW",A321,"commercial",40,60,0,68,165,390,0,15,"SXM 12",[1,3,5]],
+    ["DTW","LAN",A321,"commercial",45,80,0,72,175,420,0,10,"SXM 13",[1,3,5]],
+    ["LAN","DTW",A321,"commercial",45,80,0,72,175,420,0,16,"SXM 14",[1,3,5]],
+    ["DTW","AZO",A321,"commercial",50,120,0,78,190,460,0,11,"SXM 15",[2,4,6]],
+    ["AZO","DTW",A321,"commercial",50,120,0,78,190,460,0,17,"SXM 16",[2,4,6]],
+    ["DTW","MBS",A321B,"commercial",45,90,0,72,175,420,0,9,"SXM 17",[2,4,6]],
+    ["MBS","DTW",A321B,"commercial",45,90,0,72,175,420,0,15,"SXM 18",[2,4,6]],
+    ["DTW","CIU",A321B,"commercial",70,280,0,92,225,550,0,10,"SXM 19",[2,5]],
+    ["CIU","DTW",A321B,"commercial",70,280,0,92,225,550,0,16,"SXM 20",[2,5]],
+    ["DTW","PLN",A321B,"commercial",60,230,0,88,215,520,0,11,"SXM 21",[1,4]],
+    ["PLN","DTW",A321B,"commercial",60,230,0,88,215,520,0,16,"SXM 22",[1,4]],
+    ["DTW","ESC",A321B,"commercial",70,310,0,92,225,550,0,10,"SXM 23",[3,6]],
+    ["ESC","DTW",A321B,"commercial",70,310,0,92,225,550,0,15,"SXM 24",[3,6]],
+    ["DTW","APN",A321B,"commercial",60,200,0,85,210,510,0,9,"SXM 25",[2,5]],
+    ["APN","DTW",A321B,"commercial",60,200,0,85,210,510,0,15,"SXM 26",[2,5]],
+    ["DTW","IMT",A321B,"commercial",75,350,0,95,235,570,0,10,"SXM 27",[3,6]],
+    ["IMT","DTW",A321B,"commercial",75,350,0,95,235,570,0,15,"SXM 28",[3,6]],
+    ["DTW","CMX",A321B,"commercial",85,400,0,98,240,580,0,9,"SXM 29",[1,4]],
+    ["CMX","DTW",A321B,"commercial",85,400,0,98,240,580,0,15,"SXM 30",[1,4]],
+    ["ORD","GRR",A321,"commercial",55,150,0,82,200,480,0,9,"SXM 31",[1,3,5,7]],
+    ["GRR","ORD",A321,"commercial",55,150,0,82,200,480,0,17,"SXM 32",[1,3,5,7]],
+    ["ORD","MQT",A321,"commercial",80,340,0,95,235,570,0,11,"SXM 33",[2,5]],
+    ["MQT","ORD",A321,"commercial",85,340,0,95,235,570,0,16,"SXM 34",[2,5]],
+    ["ATL","DTW",A321C,"commercial",110,596,0,118,290,710,0,8,"SXM 35",[0]],
+    ["DTW","ATL",A321C,"commercial",115,596,0,118,290,710,0,16,"SXM 36",[0]],
+    ["DTW","LAX",B789B,"commercial",275,1983,0,245,600,1480,3200,8,"SXM 37",[1,3,5,7]],
+    ["LAX","DTW",B789B,"commercial",265,1983,0,245,600,1480,3200,11,"SXM 38",[1,3,5,7]],
+    ["DTW","MIA",A321C,"commercial",175,1152,0,168,410,1010,0,9,"SXM 39",[0]],
+    ["MIA","DTW",A321C,"commercial",185,1152,0,168,410,1010,0,16,"SXM 40",[0]],
+    ["DTW","DFW",A321C,"commercial",165,999,0,155,380,940,0,10,"SXM 41",[1,3,5]],
+    ["DFW","DTW",A321C,"commercial",155,999,0,155,380,940,0,15,"SXM 42",[1,3,5]],
+    ["LHR","DTW",B789,"commercial",510,3752,0,490,1210,3100,6200,10,"SXM 43",[1,4,6]],
+    ["DTW","LHR",B789,"commercial",470,3752,0,490,1210,3100,6200,19,"SXM 44",[2,5,7]],
+    // Private jet to Sawyer (9072ft runway)
+    ["TEB","MQT",G700,"private-jet",150,700,0,0,0,0,28500,10,"SXP 20",[2,5]],
+    ["MQT","TEB",G700,"private-jet",160,700,0,0,0,0,28500,14,"SXP 21",[3,6]],
+    ["VNY","MQT",G700,"private-jet",260,1800,0,0,0,0,52400,9,"SXP 22",[4]],
+    ["MQT","VNY",G700,"private-jet",270,1800,0,0,0,0,52400,10,"SXP 23",[5]],
   ];
 
-  // Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â GENERATE FLIGHTS: March 1 Ã¢â‚¬â€œ April 30, 2026 Ã¢â€¢ÂÃ¢â€¢ÂÃ¢â€¢Â
+  // ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â GENERATE FLIGHTS: March 1 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ April 30, 2026 ÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚ÂÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â
   const flights: any[] = [];
   let flightCount = 0;
   const startDate = new Date("2026-03-01T00:00:00Z");
@@ -317,7 +368,7 @@ async function run() {
   for (const [from, to, acid, type, dur, dist, stops, eco, prem, biz, first, depHour, numBase, dow] of routes) {
     const fromAP = AP[from];
     const toAP = AP[to];
-    if (!fromAP || !toAP) { console.log(`  Ã¢Å¡Â  Missing airport: ${from} or ${to}`); continue; }
+    if (!fromAP || !toAP) { console.log(`  ÃƒÂ¢Ã…Â¡Ã‚Â  Missing airport: ${from} or ${to}`); continue; }
 
     let date = new Date(startDate);
     let seq = 0;
@@ -358,7 +409,7 @@ async function run() {
     }
   }
 
-  console.log(`\nÃ°Å¸â€ºÂ« Inserting ${flightCount} flights (March 2026 Ã¢â‚¬â€ February 2027)...`);
+  console.log(`\nÃƒÂ°Ã…Â¸Ã¢â‚¬ÂºÃ‚Â« Inserting ${flightCount} flights (March 2026 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â February 2027)...`);
   // Batch insert in chunks of 1000
   for (let i = 0; i < flights.length; i += 1000) {
     const chunk = flights.slice(i, i + 1000);
@@ -367,33 +418,33 @@ async function run() {
   }
 
   // Create indexes for fast search
-  console.log("\nÃ°Å¸â€œâ€¡ Creating search indexes...");
+  console.log("\nÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¡ Creating search indexes...");
   await db.collection("flights").createIndex({ "departure.airportCode": 1, "arrival.airportCode": 1, "departure.scheduledTime": 1 });
   await db.collection("flights").createIndex({ "departure.city": 1 });
   await db.collection("flights").createIndex({ "arrival.city": 1 });
   await db.collection("flights").createIndex({ isActive: 1, status: 1 });
   await db.collection("flights").createIndex({ flightNumber: 1 });
-  console.log("  Ã¢Å“â€¦ Indexes created");
+  console.log("  ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ Indexes created");
 
-  console.log(`\n${"Ã¢â€¢Â".repeat(55)}`);
-  console.log(`Ã¢Å“â€¦ 12 aircraft Ã‚Â· ${flightCount.toLocaleString()} flights`);
-  console.log(`Ã°Å¸â€œâ€¦ March 2026 Ã¢â‚¬â€ February 2027 (12 months)`);
-  console.log(`${"Ã¢â€¢Â".repeat(55)}`);
-  console.log(`\nÃ°Å¸Å’Â 50+ airports across 6 continents`);
-  console.log(`Ã°Å¸â€¡Â¬Ã°Å¸â€¡Â§ UK:       LHR, LGW, MAN`);
-  console.log(`Ã°Å¸â€¡ÂªÃ°Å¸â€¡Âº Europe:   CDG, AMS, FCO, BCN, FRA, ZRH, IST, ATH`);
-  console.log(`Ã°Å¸â€¡ÂºÃ°Å¸â€¡Â¸ USA:      JFK, LAX, MIA, ORD, ATL, SFO, IAD, DFW, BOS`);
-  console.log(`Ã°Å¸â€¡Â¨Ã°Å¸â€¡Â¦ Canada:   YYZ`);
-  console.log(`Ã°Å¸â€¡Â¦Ã°Å¸â€¡Âª Gulf:     DXB, DOH, BAH, RUH, MCT, CAI`);
-  console.log(`Ã°Å¸Å’Â Asia:     NRT, SIN, HKG, ICN, BKK, BOM, DEL, KUL, PEK`);
-  console.log(`Ã°Å¸Å’Â Africa:   JNB, CPT, NBO, LOS, ACC`);
-  console.log(`Ã°Å¸Å’Â Oceania:  SYD, MEL, AKL, MLE`);
-  console.log(`Ã°Å¸Å’Å½ S.America: GRU, EZE, BOG, SCL`);
-  console.log(`Ã°Å¸â€ºÂ© Private:  NCE, MXP, IBZ, GVA, TEB, VNY, OPF, LAS, NAS`);
-  console.log(`\nÃ°Å¸â€™Â° Economy $68 Ã¢â€ â€™ First $9,500 Ã‚Â· Private $11,800 Ã¢â€ â€™ $143,800`);
-  console.log(`\nÃ°Å¸Å’Â http://localhost:3000/portal Ã¢â‚¬â€ search any route, any date March 2026 to Feb 2027!\n`);
+  console.log(`\n${"ÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â".repeat(55)}`);
+  console.log(`ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦ 12 aircraft Ãƒâ€šÃ‚Â· ${flightCount.toLocaleString()} flights`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Â¦ March 2026 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â February 2027 (12 months)`);
+  console.log(`${"ÃƒÂ¢Ã¢â‚¬Â¢Ã‚Â".repeat(55)}`);
+  console.log(`\nÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â 50+ airports across 6 continents`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¬ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â§ UK:       LHR, LGW, MAN`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚ÂªÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Âº Europe:   CDG, AMS, FCO, BCN, FRA, ZRH, IST, ATH`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚ÂºÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¸ USA:      JFK, LAX, MIA, ORD, ATL, SFO, IAD, DFW, BOS`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¨ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¦ Canada:   YYZ`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Â¦ÃƒÂ°Ã…Â¸Ã¢â‚¬Â¡Ã‚Âª Gulf:     DXB, DOH, BAH, RUH, MCT, CAI`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â Asia:     NRT, SIN, HKG, ICN, BKK, BOM, DEL, KUL, PEK`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â Africa:   JNB, CPT, NBO, LOS, ACC`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â Oceania:  SYD, MEL, AKL, MLE`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã…â€™Ã…Â½ S.America: GRU, EZE, BOG, SCL`);
+  console.log(`ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂºÃ‚Â© Private:  NCE, MXP, IBZ, GVA, TEB, VNY, OPF, LAS, NAS`);
+  console.log(`\nÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â° Economy $68 ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ First $9,500 Ãƒâ€šÃ‚Â· Private $11,800 ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ $143,800`);
+  console.log(`\nÃƒÂ°Ã…Â¸Ã…â€™Ã‚Â http://localhost:3000/portal ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â search any route, any date March 2026 to Feb 2027!\n`);
 
   await mongoose.disconnect();
 }
 
-run().catch((e) => { console.error("Ã¢ÂÅ’ Error:", e.message); process.exit(1); });
+run().catch((e) => { console.error("ÃƒÂ¢Ã‚ÂÃ…â€™ Error:", e.message); process.exit(1); });
