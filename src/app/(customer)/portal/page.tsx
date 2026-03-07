@@ -90,6 +90,7 @@ const AIRPORTS = [
   {code:"LAS",city:"Las Vegas",name:"Harry Reid",country:"USA"},
   {code:"MCO",city:"Orlando",name:"Orlando International",country:"USA"},
   {code:"HNL",city:"Honolulu",name:"Daniel K. Inouye",country:"USA"},
+  {code:"ISW",city:"Woodruff",name:"Sawyer County",country:"USA"},
   {code:"YYZ",city:"Toronto",name:"Pearson",country:"Canada"},
   {code:"YVR",city:"Vancouver",name:"Vancouver",country:"Canada"},
   {code:"YUL",city:"Montreal",name:"Trudeau",country:"Canada"},
