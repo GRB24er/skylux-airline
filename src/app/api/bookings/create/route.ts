@@ -8,164 +8,61 @@ import User from "@/models/User";
 import { generateBookingReference, calculatePriceBreakdown, calculatePointsEarned } from "@/utils/helpers";
 import { sendEmail, bookingConfirmationEmail } from "@/services/email";
 
-export async function POST(req: NextRequest) {
-  try {
-    const authResult = await authenticateUser(req);
-    if ("error" in authResult) return authResult.error;
-    await connectDB();
-    const body = await req.json();
-    const { flightIds, passengers, cabinClass, contactEmail, contactPhone, addOns, paymentMethod, useLoyaltyPoints } = body;
-    if (!flightIds?.length || !passengers?.length || !cabinClass || !contactEmail || !contactPhone || !paymentMethod) {
-      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
-    }
-
-    const realIds: string[] = [];
-    const generatedIds: string[] = [];
-    for (const id of flightIds) {
-      if (typeof id === "string" && id.startsWith("gen_")) generatedIds.push(id);
-      else realIds.push(id);
-    }
-
-    let flights: any[] = [];
-    if (realIds.length > 0) {
-      const dbFlights = await Flight.find({ _id: { $in: realIds }, isActive: true });
-      flights.push(...dbFlights);
-    }
-
-    if (generatedIds.length > 0) {
-      // Get or create a default aircraft for generated flights
-      let defaultAircraft = await Aircraft.findOne({ registration: "SX-GEN-001" });
-      if (!defaultAircraft) {
-        defaultAircraft = await Aircraft.create({
-          registration: "SX-GEN-001", name: "Boeing 787-9 Dreamliner", manufacturer: "Boeing", model: "787-9",
-          category: "commercial-widebody", type: "commercial", status: "active",
-          specs: { maxPassengers: 290, maxRange: 7635, cruiseSpeed: 488 },
-          seatConfiguration: [
-            { class: "economy", seats: 198, layout: "3-3-3", pitch: "32 inches", features: ["USB","IFE"] },
-            { class: "premium", seats: 42, layout: "2-3-2", pitch: "38 inches", features: ["USB","IFE","Legrest"] },
-            { class: "business", seats: 36, layout: "1-2-1", pitch: "60 inches", features: ["Lie-flat","Lounge"] },
-            { class: "first", seats: 14, layout: "1-1-1", pitch: "82 inches", features: ["Suite","Shower"] },
-          ],
-          amenities: ["Wi-Fi","IFE","USB"], yearManufactured: 2022, totalFlightHours: 4800, homeBase: "LHR", isAvailable: true,
-        });
-      }
-
-      for (const genId of generatedIds) {
-        const parts = genId.split("_");
-        if (parts.length >= 5) {
-          const fromCode = parts[1];
-          const toCode = parts[2];
-          const date = parts[3];
-          const idx = parseInt(parts[4]);
-          const genFlights = generateFlightsForBooking(fromCode, toCode, date, defaultAircraft._id);
-          const target = genFlights[idx];
-          if (target) {
-            // Check if flight number already exists
-            const existing = await Flight.findOne({ flightNumber: target.flightNumber });
-            if (existing) {
-              flights.push(existing);
-            } else {
-              const saved = await Flight.create(target);
-              flights.push(saved);
-            }
-          }
-        }
-      }
-    }
-
-    if (flights.length === 0) {
-      return NextResponse.json({ success: false, error: "No valid flights found" }, { status: 404 });
-    }
-
-    for (const flight of flights) {
-      const seatConfig = flight.seatMap.find((s: any) => s.class === cabinClass);
-      if (!seatConfig || seatConfig.availableSeats < passengers.length) {
-        return NextResponse.json({ success: false, error: `Not enough seats in ${cabinClass} on ${flight.flightNumber}` }, { status: 400 });
-      }
-    }
-
-    const baseFarePerPerson = flights.reduce((sum: number, f: any) => {
-      const seat = f.seatMap.find((s: any) => s.class === cabinClass);
-      return sum + (seat?.price || 0);
-    }, 0);
-    const breakdown = calculatePriceBreakdown(baseFarePerPerson, passengers.length, 0, useLoyaltyPoints || 0);
-
-    let bookingRef: string;
-    let refExists = true;
-    do { bookingRef = generateBookingReference(); refExists = !!(await Booking.findOne({ bookingReference: bookingRef })); } while (refExists);
-
-    const booking = await Booking.create({
-      bookingReference: bookingRef, user: authResult.user._id,
-      flights: flights.map((f: any, i: number) => ({ flight: f._id, direction: i === 0 ? "outbound" : "return" })),
-      passengers: passengers.map((p: any) => ({ ...p, cabinClass })),
-      cabinClass, status: "pending",
-      payment: { status: "pending", method: paymentMethod, amount: breakdown.total, currency: "USD", breakdown },
-      addOns: addOns || {}, contactEmail, contactPhone,
-      loyaltyPointsEarned: calculatePointsEarned(breakdown.total),
-    });
-
-    for (const flight of flights) {
-      const seatIdx = flight.seatMap.findIndex((s: any) => s.class === cabinClass);
-      if (seatIdx >= 0) { flight.seatMap[seatIdx].availableSeats -= passengers.length; await flight.save(); }
-    }
-
-    booking.payment.status = "completed";
-    booking.payment.paidAt = new Date();
-    booking.payment.transactionId = "TXN-" + Date.now().toString(36).toUpperCase();
-    booking.status = "confirmed";
-    await booking.save();
-
-    const user = await User.findById(authResult.user._id);
-    if (user) { user.loyaltyPoints += booking.loyaltyPointsEarned; user.totalFlights += 1; user.totalSpent += breakdown.total; await user.save(); }
-
-    const pf = flights[0];
-    try {
-      await sendEmail({
-        to: contactEmail, subject: `SKYLUX Airways - Booking Confirmed ${bookingRef}`,
-        html: bookingConfirmationEmail({
-          name: `${passengers[0].firstName} ${passengers[0].lastName}`, bookingRef,
-          flightNumber: pf.flightNumber,
-          from: `${pf.departure.city} (${pf.departure.airportCode})`,
-          to: `${pf.arrival.city} (${pf.arrival.airportCode})`,
-          date: new Date(pf.departure.scheduledTime).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }),
-          cabin: cabinClass.charAt(0).toUpperCase() + cabinClass.slice(1),
-          total: `$${breakdown.total.toLocaleString()}`,
-        }),
-      });
-      booking.eTicketSent = true; await booking.save();
-    } catch (e) { console.error("Email failed:", e); }
-
-    const populated = await Booking.findById(booking._id)
-      .populate({ path: "flights.flight", select: "flightNumber departure arrival duration status aircraft" })
-      .populate("user", "firstName lastName email").lean();
-
-    return NextResponse.json({ success: true, data: { booking: populated }, message: `Booking ${bookingRef} confirmed` }, { status: 201 });
-  } catch (error: any) {
-    console.error("Booking error:", error);
-    return NextResponse.json({ success: false, error: error.message || "Booking failed" }, { status: 500 });
-  }
-}
+/* ═════════════════════════════════════════════════════════════════
+   Airport + timezone data (must match search route exactly)
+   ═════════════════════════════════════════════════════════════════ */
 
 const TZ: Record<string,string> = {
-  LHR:"Europe/London",CDG:"Europe/Paris",FRA:"Europe/Berlin",AMS:"Europe/Amsterdam",DXB:"Asia/Dubai",
-  JFK:"America/New_York",LAX:"America/Los_Angeles",SIN:"Asia/Singapore",HKG:"Asia/Hong_Kong",NRT:"Asia/Tokyo",
-  SYD:"Australia/Sydney",ACC:"Africa/Accra",LOS:"Africa/Lagos",NBO:"Africa/Nairobi",JNB:"Africa/Johannesburg",
-  CAI:"Africa/Cairo",IST:"Europe/Istanbul",BCN:"Europe/Madrid",MAD:"Europe/Madrid",FCO:"Europe/Rome",
-  MXP:"Europe/Rome",BOM:"Asia/Kolkata",DEL:"Asia/Kolkata",BKK:"Asia/Bangkok",ICN:"Asia/Seoul",
-  GRU:"America/Sao_Paulo",MEX:"America/Mexico_City",YYZ:"America/Toronto",MIA:"America/New_York",
-  ORD:"America/Chicago",SFO:"America/Los_Angeles",ATL:"America/New_York",DFW:"America/Chicago",
-  SEA:"America/Los_Angeles",DOH:"Asia/Qatar",KUL:"Asia/Kuala_Lumpur",CPT:"Africa/Johannesburg",
-  ARN:"Europe/Stockholm",OSL:"Europe/Oslo",CPH:"Europe/Copenhagen",HEL:"Europe/Helsinki",
-  ZRH:"Europe/Zurich",VIE:"Europe/Vienna",LIS:"Europe/Lisbon",ATH:"Europe/Athens",
-  MLE:"Indian/Maldives",CMN:"Africa/Casablanca",ADD:"Africa/Addis_Ababa",CUN:"America/Cancun",
-  PVG:"Asia/Shanghai",BER:"Europe/Berlin",MUC:"Europe/Berlin",DUB:"Europe/Dublin",
-  EZE:"America/Argentina/Buenos_Aires",SCL:"America/Santiago",LIM:"America/Lima",BOG:"America/Bogota",
-  MEL:"Australia/Melbourne",AKL:"Pacific/Auckland",PEK:"Asia/Shanghai",TPE:"Asia/Taipei",
-  CGK:"Asia/Jakarta",DPS:"Asia/Makassar",HND:"Asia/Tokyo",BNE:"Australia/Brisbane",PER:"Australia/Perth",
-  WAW:"Europe/Warsaw",PRG:"Europe/Prague",BUD:"Europe/Budapest",DAR:"Africa/Dar_es_Salaam",
-  MRU:"Indian/Mauritius",RUH:"Asia/Riyadh",JED:"Asia/Riyadh",AUH:"Asia/Dubai",MCT:"Asia/Muscat",
-  AMM:"Asia/Amman",BEY:"Asia/Beirut",KWI:"Asia/Kuwait",ISB:"Asia/Karachi",BLR:"Asia/Kolkata",
-  CMB:"Asia/Colombo",SGN:"Asia/Ho_Chi_Minh",MNL:"Asia/Manila",
+  LHR:"Europe/London",LGW:"Europe/London",STN:"Europe/London",MAN:"Europe/London",EDI:"Europe/London",BHX:"Europe/London",
+  CDG:"Europe/Paris",ORY:"Europe/Paris",NCE:"Europe/Paris",LYS:"Europe/Paris",MRS:"Europe/Paris",
+  AMS:"Europe/Amsterdam",
+  FRA:"Europe/Berlin",MUC:"Europe/Berlin",BER:"Europe/Berlin",DUS:"Europe/Berlin",HAM:"Europe/Berlin",
+  FCO:"Europe/Rome",MXP:"Europe/Rome",VCE:"Europe/Rome",NAP:"Europe/Rome",
+  BCN:"Europe/Madrid",MAD:"Europe/Madrid",AGP:"Europe/Madrid",PMI:"Europe/Madrid",IBZ:"Europe/Madrid",
+  LIS:"Europe/Lisbon",OPO:"Europe/Lisbon",
+  ZRH:"Europe/Zurich",GVA:"Europe/Zurich",
+  VIE:"Europe/Vienna",BRU:"Europe/Brussels",
+  CPH:"Europe/Copenhagen",OSL:"Europe/Oslo",ARN:"Europe/Stockholm",GOT:"Europe/Stockholm",HEL:"Europe/Helsinki",
+  DUB:"Europe/Dublin",ATH:"Europe/Athens",
+  IST:"Europe/Istanbul",SAW:"Europe/Istanbul",AYT:"Europe/Istanbul",
+  WAW:"Europe/Warsaw",PRG:"Europe/Prague",BUD:"Europe/Budapest",
+  OTP:"Europe/Bucharest",SOF:"Europe/Sofia",BEG:"Europe/Belgrade",ZAG:"Europe/Zagreb",
+  KEF:"Atlantic/Reykjavik",
+  DXB:"Asia/Dubai",DWC:"Asia/Dubai",AUH:"Asia/Dubai",
+  DOH:"Asia/Qatar",BAH:"Asia/Bahrain",
+  RUH:"Asia/Riyadh",JED:"Asia/Riyadh",MCT:"Asia/Muscat",KWI:"Asia/Kuwait",
+  AMM:"Asia/Amman",BEY:"Asia/Beirut",TLV:"Asia/Jerusalem",
+  JFK:"America/New_York",EWR:"America/New_York",TEB:"America/New_York",
+  LAX:"America/Los_Angeles",VNY:"America/Los_Angeles",SFO:"America/Los_Angeles",SEA:"America/Los_Angeles",LAS:"America/Los_Angeles",
+  MIA:"America/New_York",OPF:"America/New_York",ATL:"America/New_York",MCO:"America/New_York",BOS:"America/New_York",
+  ORD:"America/Chicago",DFW:"America/Chicago",IAH:"America/Chicago",MSP:"America/Chicago",
+  IAD:"America/New_York",DTW:"America/New_York",DEN:"America/Denver",PHX:"America/Phoenix",
+  MQT:"America/Detroit",GRR:"America/Detroit",FNT:"America/Detroit",LAN:"America/Detroit",
+  MBS:"America/Detroit",AZO:"America/Detroit",TVC:"America/Detroit",MKG:"America/Detroit",
+  PLN:"America/Detroit",CIU:"America/Detroit",ESC:"America/Detroit",IMT:"America/Chicago",
+  APN:"America/Detroit",CMX:"America/Detroit",IWD:"America/Chicago",MBL:"America/Detroit",
+  HNL:"Pacific/Honolulu",
+  YYZ:"America/Toronto",YVR:"America/Vancouver",YUL:"America/Montreal",
+  MEX:"America/Mexico_City",CUN:"America/Cancun",
+  NRT:"Asia/Tokyo",HND:"Asia/Tokyo",KIX:"Asia/Tokyo",
+  SIN:"Asia/Singapore",HKG:"Asia/Hong_Kong",ICN:"Asia/Seoul",
+  BKK:"Asia/Bangkok",KUL:"Asia/Kuala_Lumpur",
+  CGK:"Asia/Jakarta",DPS:"Asia/Makassar",
+  MNL:"Asia/Manila",SGN:"Asia/Ho_Chi_Minh",HAN:"Asia/Ho_Chi_Minh",
+  PEK:"Asia/Shanghai",PVG:"Asia/Shanghai",CAN:"Asia/Shanghai",TPE:"Asia/Taipei",
+  BOM:"Asia/Kolkata",DEL:"Asia/Kolkata",BLR:"Asia/Kolkata",
+  CMB:"Asia/Colombo",KTM:"Asia/Kathmandu",DAC:"Asia/Dhaka",
+  ISB:"Asia/Karachi",KHI:"Asia/Karachi",MLE:"Indian/Maldives",
+  JNB:"Africa/Johannesburg",CPT:"Africa/Johannesburg",
+  NBO:"Africa/Nairobi",LOS:"Africa/Lagos",ACC:"Africa/Accra",
+  CAI:"Africa/Cairo",CMN:"Africa/Casablanca",ADD:"Africa/Addis_Ababa",
+  DAR:"Africa/Dar_es_Salaam",MRU:"Indian/Mauritius",SEZ:"Indian/Mahe",
+  NAS:"America/Nassau",
+  GRU:"America/Sao_Paulo",GIG:"America/Sao_Paulo",
+  EZE:"America/Argentina/Buenos_Aires",BOG:"America/Bogota",
+  SCL:"America/Santiago",LIM:"America/Lima",
+  SYD:"Australia/Sydney",MEL:"Australia/Melbourne",BNE:"Australia/Brisbane",PER:"Australia/Perth",
+  AKL:"Pacific/Auckland",NAN:"Pacific/Fiji",
 };
 
 const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
@@ -194,11 +91,11 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   DEL:{c:"Delhi",co:"India",la:28.56,lo:77.1,n:"Indira Gandhi"},
   BKK:{c:"Bangkok",co:"Thailand",la:13.69,lo:100.75,n:"Suvarnabhumi"},
   ICN:{c:"Seoul",co:"South Korea",la:37.46,lo:126.44,n:"Incheon"},
-  GRU:{c:"Sao Paulo",co:"Brazil",la:-23.43,lo:-46.47,n:"Guarulhos"},
-  MEX:{c:"Mexico City",co:"Mexico",la:19.44,lo:-99.07,n:"Benito Juarez"},
+  GRU:{c:"São Paulo",co:"Brazil",la:-23.43,lo:-46.47,n:"Guarulhos"},
+  MEX:{c:"Mexico City",co:"Mexico",la:19.44,lo:-99.07,n:"Benito Juárez"},
   YYZ:{c:"Toronto",co:"Canada",la:43.68,lo:-79.63,n:"Pearson"},
   MIA:{c:"Miami",co:"USA",la:25.79,lo:-80.29,n:"Miami International"},
-  ORD:{c:"Chicago",co:"USA",la:41.97,lo:-87.91,n:"O Hare"},
+  ORD:{c:"Chicago",co:"USA",la:41.97,lo:-87.91,n:"O'Hare"},
   SFO:{c:"San Francisco",co:"USA",la:37.62,lo:-122.38,n:"SFO"},
   ATL:{c:"Atlanta",co:"USA",la:33.64,lo:-84.43,n:"Hartsfield-Jackson"},
   DFW:{c:"Dallas",co:"USA",la:32.9,lo:-97.04,n:"Dallas Fort Worth"},
@@ -214,18 +111,18 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   VIE:{c:"Vienna",co:"Austria",la:48.11,lo:16.57,n:"Schwechat"},
   LIS:{c:"Lisbon",co:"Portugal",la:38.77,lo:-9.13,n:"Humberto Delgado"},
   ATH:{c:"Athens",co:"Greece",la:37.94,lo:23.94,n:"Eleftherios Venizelos"},
-  MLE:{c:"Male",co:"Maldives",la:4.19,lo:73.53,n:"Velana"},
+  MLE:{c:"Malé",co:"Maldives",la:4.19,lo:73.53,n:"Velana"},
   CMN:{c:"Casablanca",co:"Morocco",la:33.37,lo:-7.59,n:"Mohammed V"},
   ADD:{c:"Addis Ababa",co:"Ethiopia",la:8.98,lo:38.8,n:"Bole"},
-  CUN:{c:"Cancun",co:"Mexico",la:21.04,lo:-86.87,n:"Cancun International"},
+  CUN:{c:"Cancún",co:"Mexico",la:21.04,lo:-86.87,n:"Cancún International"},
   PVG:{c:"Shanghai",co:"China",la:31.14,lo:121.81,n:"Pudong"},
   BER:{c:"Berlin",co:"Germany",la:52.37,lo:13.52,n:"Brandenburg"},
   MUC:{c:"Munich",co:"Germany",la:48.35,lo:11.79,n:"Franz Josef Strauss"},
   DUB:{c:"Dublin",co:"Ireland",la:53.42,lo:-6.27,n:"Dublin"},
   EZE:{c:"Buenos Aires",co:"Argentina",la:-34.82,lo:-58.54,n:"Ezeiza"},
   SCL:{c:"Santiago",co:"Chile",la:-33.39,lo:-70.79,n:"Arturo Merino"},
-  LIM:{c:"Lima",co:"Peru",la:-12.02,lo:-77.11,n:"Jorge Chavez"},
-  BOG:{c:"Bogota",co:"Colombia",la:4.7,lo:-74.15,n:"El Dorado"},
+  LIM:{c:"Lima",co:"Peru",la:-12.02,lo:-77.11,n:"Jorge Chávez"},
+  BOG:{c:"Bogotá",co:"Colombia",la:4.7,lo:-74.15,n:"El Dorado"},
   MEL:{c:"Melbourne",co:"Australia",la:-37.67,lo:144.84,n:"Tullamarine"},
   AKL:{c:"Auckland",co:"New Zealand",la:-36.85,lo:174.76,n:"Auckland"},
   PEK:{c:"Beijing",co:"China",la:40.08,lo:116.58,n:"Capital International"},
@@ -236,7 +133,7 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   BNE:{c:"Brisbane",co:"Australia",la:-27.38,lo:153.12,n:"Brisbane"},
   PER:{c:"Perth",co:"Australia",la:-31.94,lo:115.97,n:"Perth"},
   WAW:{c:"Warsaw",co:"Poland",la:52.17,lo:20.97,n:"Chopin"},
-  PRG:{c:"Prague",co:"Czech Republic",la:50.1,lo:14.26,n:"Vaclav Havel"},
+  PRG:{c:"Prague",co:"Czech Republic",la:50.1,lo:14.26,n:"Václav Havel"},
   BUD:{c:"Budapest",co:"Hungary",la:47.44,lo:19.26,n:"Ferenc Liszt"},
   DAR:{c:"Dar es Salaam",co:"Tanzania",la:-6.88,lo:39.2,n:"Julius Nyerere"},
   MRU:{c:"Mauritius",co:"Mauritius",la:-20.43,lo:57.68,n:"SSR International"},
@@ -252,6 +149,22 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   CMB:{c:"Colombo",co:"Sri Lanka",la:7.18,lo:79.88,n:"Bandaranaike"},
   SGN:{c:"Ho Chi Minh City",co:"Vietnam",la:10.82,lo:106.65,n:"Tan Son Nhat"},
   MNL:{c:"Manila",co:"Philippines",la:14.51,lo:121.02,n:"Ninoy Aquino"},
+  // Michigan
+  DTW:{c:"Detroit",co:"USA",la:42.21,lo:-83.35,n:"Detroit Metro"},
+  MQT:{c:"Marquette",co:"USA",la:46.3536,lo:-87.3953,n:"Sawyer International"},
+  GRR:{c:"Grand Rapids",co:"USA",la:42.8808,lo:-85.5228,n:"Gerald R. Ford International"},
+  FNT:{c:"Flint",co:"USA",la:42.9654,lo:-83.7436,n:"Bishop International"},
+  LAN:{c:"Lansing",co:"USA",la:42.7787,lo:-84.5874,n:"Capital Region International"},
+  // Extended US
+  EWR:{c:"Newark",co:"USA",la:40.69,lo:-74.17,n:"Newark Liberty"},
+  IAD:{c:"Washington DC",co:"USA",la:38.95,lo:-77.46,n:"Dulles"},
+  BOS:{c:"Boston",co:"USA",la:42.36,lo:-71.01,n:"Logan"},
+  DEN:{c:"Denver",co:"USA",la:39.86,lo:-104.67,n:"Denver International"},
+  LAS:{c:"Las Vegas",co:"USA",la:36.08,lo:-115.15,n:"Harry Reid"},
+  MCO:{c:"Orlando",co:"USA",la:28.43,lo:-81.31,n:"Orlando International"},
+  HNL:{c:"Honolulu",co:"USA",la:21.32,lo:-157.92,n:"Daniel K. Inouye"},
+  YVR:{c:"Vancouver",co:"Canada",la:49.19,lo:-123.18,n:"Vancouver"},
+  NAS:{c:"Nassau",co:"Bahamas",la:25.04,lo:-77.47,n:"Lynden Pindling"},
 };
 
 function dist(a1:number,o1:number,a2:number,o2:number){
@@ -262,6 +175,15 @@ function dist(a1:number,o1:number,a2:number,o2:number){
 
 function sRng(s:string){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return()=>{h=(h*16807)%2147483647;return(h&0x7fffffff)/2147483647}}
 
+/**
+ * Generate flights for booking — MUST match search route's genFlights() output exactly.
+ * 
+ * KEY FIXES vs original:
+ * 1. Flight number format: "SX 123" (matches search route)
+ * 2. Cabin class names: "premium" not "premium-economy" (matches search route)
+ * 3. Timezone data included in departure/arrival
+ * 4. Uses same seeded RNG so gen_XXX index maps to identical flight
+ */
 function generateFlightsForBooking(fc:string,tc:string,ds:string,aircraftId:any){
   const f=AP[fc],t=AP[tc];if(!f||!t||fc===tc)return[];
   const nm=dist(f.la,f.lo,t.la,t.lo);
@@ -302,4 +224,217 @@ function generateFlightsForBooking(fc:string,tc:string,ds:string,aircraftId:any)
     });
   }
   return out;
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const authResult = await authenticateUser(req);
+    if ("error" in authResult) return authResult.error;
+    await connectDB();
+    const body = await req.json();
+    const { flightIds, passengers, cabinClass, contactEmail, contactPhone, addOns, paymentMethod, useLoyaltyPoints } = body;
+
+    if (!flightIds?.length || !passengers?.length || !cabinClass || !contactEmail || !contactPhone || !paymentMethod) {
+      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
+    }
+
+    // ── Separate real DB IDs from generated IDs ──
+    const realIds: string[] = [];
+    const generatedIds: string[] = [];
+    for (const id of flightIds) {
+      if (typeof id === "string" && id.startsWith("gen_")) {
+        generatedIds.push(id);
+      } else {
+        realIds.push(id);
+      }
+    }
+
+    console.log("[Booking] flightIds:", flightIds);
+    console.log("[Booking] realIds:", realIds, "generatedIds:", generatedIds);
+
+    let flights: any[] = [];
+
+    // ── Handle real DB flights ──
+    if (realIds.length > 0) {
+      const dbFlights = await Flight.find({ _id: { $in: realIds }, isActive: true });
+      console.log("[Booking] DB flights found:", dbFlights.length);
+      flights.push(...dbFlights);
+    }
+
+    // ── Handle generated flights ──
+    if (generatedIds.length > 0) {
+      // Get or create a default aircraft for generated flights
+      let defaultAircraft = await Aircraft.findOne({ registration: "SX-GEN-001" });
+      if (!defaultAircraft) {
+        defaultAircraft = await Aircraft.create({
+          registration: "SX-GEN-001", name: "Boeing 787-9 Dreamliner", manufacturer: "Boeing", model: "787-9",
+          category: "commercial-widebody", type: "commercial", status: "active",
+          specs: { maxPassengers: 290, maxRange: 7635, cruiseSpeed: 488 },
+          seatConfiguration: [
+            { class: "economy", seats: 198, layout: "3-3-3", pitch: "32 inches", features: ["USB","IFE"] },
+            { class: "premium", seats: 42, layout: "2-3-2", pitch: "38 inches", features: ["USB","IFE","Legrest"] },
+            { class: "business", seats: 36, layout: "1-2-1", pitch: "60 inches", features: ["Lie-flat","Lounge"] },
+            { class: "first", seats: 14, layout: "1-1-1", pitch: "82 inches", features: ["Suite","Shower"] },
+          ],
+          amenities: ["Wi-Fi","IFE","USB"], yearManufactured: 2022, totalFlightHours: 4800, homeBase: "LHR", isAvailable: true,
+        });
+      }
+
+      for (const genId of generatedIds) {
+        // Parse: gen_LHR_JFK_2026-03-10_0
+        const parts = genId.split("_");
+        console.log("[Booking] Parsing gen ID:", genId, "parts:", parts);
+
+        if (parts.length >= 5) {
+          const fromCode = parts[1];
+          const toCode = parts[2];
+          const date = parts[3];  // "2026-03-10" stays intact (hyphens, not underscores)
+          const idx = parseInt(parts[4]);
+
+          console.log("[Booking] Generating flight:", fromCode, "→", toCode, "date:", date, "idx:", idx);
+
+          const genFlights = generateFlightsForBooking(fromCode, toCode, date, defaultAircraft._id);
+          console.log("[Booking] Generated", genFlights.length, "flights, picking index", idx);
+
+          const target = genFlights[idx];
+          if (target) {
+            // Check if this flight number already exists in DB (avoid duplicates)
+            const existing = await Flight.findOne({ flightNumber: target.flightNumber });
+            if (existing) {
+              console.log("[Booking] Flight", target.flightNumber, "already exists in DB, using existing");
+              flights.push(existing);
+            } else {
+              console.log("[Booking] Creating new flight:", target.flightNumber);
+              const saved = await Flight.create(target);
+              flights.push(saved);
+            }
+          } else {
+            console.log("[Booking] No flight at index", idx, "— generated array length:", genFlights.length);
+          }
+        } else {
+          console.log("[Booking] Invalid gen ID format (need 5+ parts):", genId);
+        }
+      }
+    }
+
+    if (flights.length === 0) {
+      console.log("[Booking] FAILED — no valid flights found for IDs:", flightIds);
+      return NextResponse.json({ success: false, error: "No valid flights found" }, { status: 404 });
+    }
+
+    // ── Check seat availability ──
+    for (const flight of flights) {
+      const seatConfig = flight.seatMap.find((s: any) => s.class === cabinClass);
+      if (!seatConfig || seatConfig.availableSeats < passengers.length) {
+        return NextResponse.json(
+          { success: false, error: `Not enough seats in ${cabinClass} on ${flight.flightNumber}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // ── Calculate pricing ──
+    const baseFarePerPerson = flights.reduce((sum: number, f: any) => {
+      const seat = f.seatMap.find((s: any) => s.class === cabinClass);
+      return sum + (seat?.price || 0);
+    }, 0);
+    const breakdown = calculatePriceBreakdown(baseFarePerPerson, passengers.length, 0, useLoyaltyPoints || 0);
+
+    // ── Generate unique booking reference ──
+    let bookingRef: string;
+    let refExists = true;
+    do {
+      bookingRef = generateBookingReference();
+      refExists = !!(await Booking.findOne({ bookingReference: bookingRef }));
+    } while (refExists);
+
+    // ── Create booking ──
+    const booking = await Booking.create({
+      bookingReference: bookingRef,
+      user: authResult.user._id,
+      flights: flights.map((f: any, i: number) => ({
+        flight: f._id,
+        direction: i === 0 ? "outbound" : "return",
+      })),
+      passengers: passengers.map((p: any) => ({ ...p, cabinClass })),
+      cabinClass,
+      status: "pending",
+      payment: {
+        status: "pending",
+        method: paymentMethod,
+        amount: breakdown.total,
+        currency: "USD",
+        breakdown,
+      },
+      addOns: addOns || {},
+      contactEmail,
+      contactPhone,
+      loyaltyPointsEarned: calculatePointsEarned(breakdown.total),
+    });
+
+    // ── Deduct seats ──
+    for (const flight of flights) {
+      const seatIdx = flight.seatMap.findIndex((s: any) => s.class === cabinClass);
+      if (seatIdx >= 0) {
+        flight.seatMap[seatIdx].availableSeats -= passengers.length;
+        await flight.save();
+      }
+    }
+
+    // ── Complete payment ──
+    booking.payment.status = "completed";
+    booking.payment.paidAt = new Date();
+    booking.payment.transactionId = "TXN-" + Date.now().toString(36).toUpperCase();
+    booking.status = "confirmed";
+    await booking.save();
+
+    // ── Update user stats ──
+    const user = await User.findById(authResult.user._id);
+    if (user) {
+      user.loyaltyPoints += booking.loyaltyPointsEarned;
+      user.totalFlights += 1;
+      user.totalSpent += breakdown.total;
+      await user.save();
+    }
+
+    // ── Send confirmation email ──
+    const pf = flights[0];
+    try {
+      await sendEmail({
+        to: contactEmail,
+        subject: `SKYLUX Airways - Booking Confirmed ${bookingRef}`,
+        html: bookingConfirmationEmail({
+          name: `${passengers[0].firstName} ${passengers[0].lastName}`,
+          bookingRef,
+          flightNumber: pf.flightNumber,
+          from: `${pf.departure.city} (${pf.departure.airportCode})`,
+          to: `${pf.arrival.city} (${pf.arrival.airportCode})`,
+          date: new Date(pf.departure.scheduledTime).toLocaleDateString("en-US", {
+            weekday: "long", year: "numeric", month: "long", day: "numeric",
+          }),
+          cabin: cabinClass.charAt(0).toUpperCase() + cabinClass.slice(1),
+          total: `$${breakdown.total.toLocaleString()}`,
+        }),
+      });
+      booking.eTicketSent = true;
+      await booking.save();
+    } catch (e) {
+      console.error("Email failed:", e);
+    }
+
+    // ── Return populated booking ──
+    const populated = await Booking.findById(booking._id)
+      .populate({ path: "flights.flight", select: "flightNumber departure arrival duration status aircraft" })
+      .populate("user", "firstName lastName email")
+      .lean();
+
+    console.log("[Booking] SUCCESS — ref:", bookingRef);
+    return NextResponse.json(
+      { success: true, data: { booking: populated }, message: `Booking ${bookingRef} confirmed` },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error("Booking error:", error);
+    return NextResponse.json({ success: false, error: error.message || "Booking failed" }, { status: 500 });
+  }
 }
