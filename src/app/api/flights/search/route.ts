@@ -109,6 +109,7 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   CMX:{c:"Hancock",co:"USA",la:47.1684,lo:-88.4891,n:"Houghton County Memorial"},
   IWD:{c:"Ironwood",co:"USA",la:46.5275,lo:-90.1314,n:"Gogebic-Iron County"},
   MBL:{c:"Manistee",co:"USA",la:44.2725,lo:-86.2469,n:"Manistee County Blacker"},
+  ISW:{c:"Woodruff",co:"USA",la:45.9293,lo:-89.8410,n:"Sawyer County"},
   MCO:{c:"Orlando",co:"USA",la:28.43,lo:-81.31,n:"Orlando International"},
   HNL:{c:"Honolulu",co:"USA",la:21.32,lo:-157.92,n:"Daniel K. Inouye"},
   YYZ:{c:"Toronto",co:"Canada",la:43.68,lo:-79.63,n:"Pearson"},
