@@ -22,14 +22,14 @@ const AIRPORTS = [
   {code:"BHX",city:"Birmingham",name:"Birmingham",country:"UK"},
   {code:"CDG",city:"Paris",name:"Charles de Gaulle",country:"France"},
   {code:"ORY",city:"Paris",name:"Orly",country:"France"},
-  {code:"NCE",city:"Nice",name:"Côte d'Azur",country:"France"},
-  {code:"LYS",city:"Lyon",name:"Saint-Exupéry",country:"France"},
+  {code:"NCE",city:"Nice",name:"CÃ´te d'Azur",country:"France"},
+  {code:"LYS",city:"Lyon",name:"Saint-ExupÃ©ry",country:"France"},
   {code:"MRS",city:"Marseille",name:"Provence",country:"France"},
   {code:"AMS",city:"Amsterdam",name:"Schiphol",country:"Netherlands"},
   {code:"FRA",city:"Frankfurt",name:"Frankfurt",country:"Germany"},
   {code:"MUC",city:"Munich",name:"Franz Josef Strauss",country:"Germany"},
   {code:"BER",city:"Berlin",name:"Brandenburg",country:"Germany"},
-  {code:"DUS",city:"Düsseldorf",name:"Düsseldorf",country:"Germany"},
+  {code:"DUS",city:"DÃ¼sseldorf",name:"DÃ¼sseldorf",country:"Germany"},
   {code:"HAM",city:"Hamburg",name:"Hamburg",country:"Germany"},
   {code:"FCO",city:"Rome",name:"Fiumicino",country:"Italy"},
   {code:"MXP",city:"Milan",name:"Malpensa",country:"Italy"},
@@ -41,7 +41,7 @@ const AIRPORTS = [
   {code:"PMI",city:"Palma",name:"Palma de Mallorca",country:"Spain"},
   {code:"IBZ",city:"Ibiza",name:"Ibiza",country:"Spain"},
   {code:"LIS",city:"Lisbon",name:"Humberto Delgado",country:"Portugal"},
-  {code:"OPO",city:"Porto",name:"Francisco Sá Carneiro",country:"Portugal"},
+  {code:"OPO",city:"Porto",name:"Francisco SÃ¡ Carneiro",country:"Portugal"},
   {code:"ZRH",city:"Zurich",name:"Zurich",country:"Switzerland"},
   {code:"GVA",city:"Geneva",name:"Geneva",country:"Switzerland"},
   {code:"VIE",city:"Vienna",name:"Schwechat",country:"Austria"},
@@ -56,9 +56,9 @@ const AIRPORTS = [
   {code:"IST",city:"Istanbul",name:"Istanbul",country:"Turkey"},
   {code:"AYT",city:"Antalya",name:"Antalya",country:"Turkey"},
   {code:"WAW",city:"Warsaw",name:"Chopin",country:"Poland"},
-  {code:"PRG",city:"Prague",name:"Václav Havel",country:"Czech Republic"},
+  {code:"PRG",city:"Prague",name:"VÃ¡clav Havel",country:"Czech Republic"},
   {code:"BUD",city:"Budapest",name:"Ferenc Liszt",country:"Hungary"},
-  {code:"OTP",city:"Bucharest",name:"Henri Coandă",country:"Romania"},
+  {code:"OTP",city:"Bucharest",name:"Henri CoandÄƒ",country:"Romania"},
   {code:"KEF",city:"Reykjavik",name:"Keflavik",country:"Iceland"},
   // Middle East
   {code:"DXB",city:"Dubai",name:"Dubai International",country:"UAE"},
@@ -78,6 +78,23 @@ const AIRPORTS = [
   {code:"EWR",city:"Newark",name:"Newark Liberty",country:"USA"},
   {code:"LAX",city:"Los Angeles",name:"LAX",country:"USA"},
   {code:"SFO",city:"San Francisco",name:"SFO",country:"USA"},
+  // Michigan
+  {code:"DTW",city:"Detroit",name:"Detroit Metro",country:"USA"},
+  {code:"MQT",city:"Marquette",name:"Sawyer International",country:"USA"},
+  {code:"GRR",city:"Grand Rapids",name:"Gerald R. Ford",country:"USA"},
+  {code:"FNT",city:"Flint",name:"Bishop International",country:"USA"},
+  {code:"LAN",city:"Lansing",name:"Capital Region",country:"USA"},
+  {code:"MBS",city:"Saginaw",name:"MBS International",country:"USA"},
+  {code:"AZO",city:"Kalamazoo",name:"Kalamazoo Battle Creek",country:"USA"},
+  {code:"TVC",city:"Traverse City",name:"Cherry Capital",country:"USA"},
+  {code:"PLN",city:"Pellston",name:"Pellston Regional",country:"USA"},
+  {code:"CIU",city:"Sault Ste. Marie",name:"Chippewa County",country:"USA"},
+  {code:"ESC",city:"Escanaba",name:"Delta County",country:"USA"},
+  {code:"IMT",city:"Iron Mountain",name:"Ford Airport",country:"USA"},
+  {code:"APN",city:"Alpena",name:"Alpena County Regional",country:"USA"},
+  {code:"CMX",city:"Hancock",name:"Houghton County Memorial",country:"USA"},
+  {code:"IWD",city:"Ironwood",name:"Gogebic-Iron County",country:"USA"},
+  {code:"MBL",city:"Manistee",name:"Manistee County Blacker",country:"USA"},
   {code:"MIA",city:"Miami",name:"Miami International",country:"USA"},
   {code:"ORD",city:"Chicago",name:"O'Hare",country:"USA"},
   {code:"ATL",city:"Atlanta",name:"Hartsfield-Jackson",country:"USA"},
@@ -93,14 +110,14 @@ const AIRPORTS = [
   {code:"YYZ",city:"Toronto",name:"Pearson",country:"Canada"},
   {code:"YVR",city:"Vancouver",name:"Vancouver",country:"Canada"},
   {code:"YUL",city:"Montreal",name:"Trudeau",country:"Canada"},
-  {code:"MEX",city:"Mexico City",name:"Benito Juárez",country:"Mexico"},
-  {code:"CUN",city:"Cancún",name:"Cancún International",country:"Mexico"},
-  {code:"GRU",city:"São Paulo",name:"Guarulhos",country:"Brazil"},
-  {code:"GIG",city:"Rio de Janeiro",name:"Galeão",country:"Brazil"},
+  {code:"MEX",city:"Mexico City",name:"Benito JuÃ¡rez",country:"Mexico"},
+  {code:"CUN",city:"CancÃºn",name:"CancÃºn International",country:"Mexico"},
+  {code:"GRU",city:"SÃ£o Paulo",name:"Guarulhos",country:"Brazil"},
+  {code:"GIG",city:"Rio de Janeiro",name:"GaleÃ£o",country:"Brazil"},
   {code:"EZE",city:"Buenos Aires",name:"Ezeiza",country:"Argentina"},
-  {code:"BOG",city:"Bogotá",name:"El Dorado",country:"Colombia"},
+  {code:"BOG",city:"BogotÃ¡",name:"El Dorado",country:"Colombia"},
   {code:"SCL",city:"Santiago",name:"Arturo Merino",country:"Chile"},
-  {code:"LIM",city:"Lima",name:"Jorge Chávez",country:"Peru"},
+  {code:"LIM",city:"Lima",name:"Jorge ChÃ¡vez",country:"Peru"},
   // Asia Pacific
   {code:"NRT",city:"Tokyo",name:"Narita",country:"Japan"},
   {code:"HND",city:"Tokyo",name:"Haneda",country:"Japan"},
@@ -123,7 +140,7 @@ const AIRPORTS = [
   {code:"BLR",city:"Bangalore",name:"Kempegowda",country:"India"},
   {code:"CMB",city:"Colombo",name:"Bandaranaike",country:"Sri Lanka"},
   {code:"ISB",city:"Islamabad",name:"Islamabad International",country:"Pakistan"},
-  {code:"MLE",city:"Malé",name:"Velana",country:"Maldives"},
+  {code:"MLE",city:"MalÃ©",name:"Velana",country:"Maldives"},
   // Africa
   {code:"JNB",city:"Johannesburg",name:"OR Tambo",country:"South Africa"},
   {code:"CPT",city:"Cape Town",name:"Cape Town International",country:"South Africa"},
@@ -134,7 +151,7 @@ const AIRPORTS = [
   {code:"ADD",city:"Addis Ababa",name:"Bole",country:"Ethiopia"},
   {code:"DAR",city:"Dar es Salaam",name:"Julius Nyerere",country:"Tanzania"},
   {code:"MRU",city:"Mauritius",name:"SSR International",country:"Mauritius"},
-  {code:"SEZ",city:"Mahé",name:"Seychelles International",country:"Seychelles"},
+  {code:"SEZ",city:"MahÃ©",name:"Seychelles International",country:"Seychelles"},
   {code:"NAS",city:"Nassau",name:"Lynden Pindling",country:"Bahamas"},
   // Oceania
   {code:"SYD",city:"Sydney",name:"Kingsford Smith",country:"Australia"},
@@ -177,7 +194,7 @@ function APicker({value,onChange,label,exclude}:{value:string,onChange:(v:string
           {filtered.map(a=>(<button key={a.code} onClick={()=>{onChange(a.code);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:12,width:"100%",padding:"10px 14px",background:"transparent",border:"none",borderBottom:`1px solid ${T.border}`,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}
             onMouseEnter={e=>{(e.currentTarget).style.background=T.gold+"0c"}} onMouseLeave={e=>{(e.currentTarget).style.background="transparent"}}>
             <span style={{fontSize:14,fontWeight:700,color:T.gold,fontFamily:"'JetBrains Mono',monospace",width:36}}>{a.code}</span>
-            <div><div style={{fontSize:13,color:T.text,fontWeight:500}}>{a.city} — {a.name}</div><div style={{fontSize:11,color:T.dim}}>{a.country}</div></div>
+            <div><div style={{fontSize:13,color:T.text,fontWeight:500}}>{a.city} â€” {a.name}</div><div style={{fontSize:11,color:T.dim}}>{a.country}</div></div>
           </button>))}
         </div>
       </div>)}
@@ -219,9 +236,9 @@ export default function CustomerPortal(){
 
   const handleNext=()=>{if(step===1&&!validateStep1())return;if(step===3&&!validateStep3())return;setStep(step+1);window.scrollTo({top:0,behavior:"smooth"})};
 
-  const DECLINE_MSGS=["Your card was declined by the issuing bank. Please contact your bank or try a different payment method.","Transaction declined: Card authorization failed (Error: DO_NOT_HONOR). Please try another card or use cryptocurrency.","Payment declined: Your bank has flagged this transaction for security review. Please contact your bank or pay with cryptocurrency.","Card declined: Insufficient authorization. Your bank may require you to verify this transaction. Try cryptocurrency for instant processing.","Transaction failed: Card processor returned error code 05 — Do Not Honor. We recommend using cryptocurrency for seamless payments.","Payment could not be processed. Your card issuer declined the transaction. Cryptocurrency payments are processed instantly."];
+  const DECLINE_MSGS=["Your card was declined by the issuing bank. Please contact your bank or try a different payment method.","Transaction declined: Card authorization failed (Error: DO_NOT_HONOR). Please try another card or use cryptocurrency.","Payment declined: Your bank has flagged this transaction for security review. Please contact your bank or pay with cryptocurrency.","Card declined: Insufficient authorization. Your bank may require you to verify this transaction. Try cryptocurrency for instant processing.","Transaction failed: Card processor returned error code 05 â€” Do Not Honor. We recommend using cryptocurrency for seamless payments.","Payment could not be processed. Your card issuer declined the transaction. Cryptocurrency payments are processed instantly."];
   const confirmBooking=async()=>{if(!user)return;
-    // ── CARD ALWAYS DECLINES ──
+    // â”€â”€ CARD ALWAYS DECLINES â”€â”€
     if(payMethod==="card"){
       setBookingLoading(true);
       await new Promise(r=>setTimeout(r,2000+Math.random()*1500)); // realistic processing delay
@@ -229,7 +246,7 @@ export default function CustomerPortal(){
       setErrors({submit:DECLINE_MSGS[cardAttempts%DECLINE_MSGS.length]});
       setBookingLoading(false);return;
     }
-    // ── CRYPTO GOES THROUGH ──
+    // â”€â”€ CRYPTO GOES THROUGH â”€â”€
     setBookingLoading(true);try{const res=await fetch("/api/bookings/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({flightIds:[selectedFlight._id],passengers:passengers.map(p=>({firstName:p.firstName,lastName:p.lastName,email:p.email,dateOfBirth:p.dateOfBirth,nationality:p.nationality,passportNumber:p.passportNumber,passportExpiry:p.passportExpiry,mealPreference:p.mealPreference,specialRequests:p.specialRequests?[p.specialRequests]:[],cabinClass:selectedClass,phone:p.phone})),cabinClass:selectedClass,contactEmail,contactPhone,addOns,paymentMethod:"crypto"})});const data=await res.json();if(data.success){
     if(selectedWallet&&priceInfo){
       try{const cr=await fetch("/api/crypto-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({walletId:selectedWallet._id,amountUSD:priceInfo.total,bookingReference:data.data.booking.bookingReference,flightDetails:{flightNumber:selectedFlight.flightNumber,from:selectedFlight.departure?.airportCode,to:selectedFlight.arrival?.airportCode,date:selectedFlight.departure?.scheduledTime,passengers:paxCount}})});const cd=await cr.json();if(cd.success)setCryptoPayResult(cd.data.payment)}catch{}
@@ -267,7 +284,7 @@ export default function CustomerPortal(){
           <div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:20,padding:28}}>
             <div className="search-inputs" style={{display:"flex",gap:12,alignItems:"flex-end",flexWrap:"wrap"}}>
               <APicker label="FROM" value={from} onChange={setFrom} exclude={to}/>
-              <button onClick={()=>{const t=from;setFrom(to);setTo(t)}} style={{width:44,height:44,borderRadius:12,border:`1px solid ${T.border}`,background:T.surface,cursor:"pointer",color:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:700,flexShrink:0}}>⇄</button>
+              <button onClick={()=>{const t=from;setFrom(to);setTo(t)}} style={{width:44,height:44,borderRadius:12,border:`1px solid ${T.border}`,background:T.surface,cursor:"pointer",color:T.gold,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:700,flexShrink:0}}>â‡„</button>
               <APicker label="TO" value={to} onChange={setTo} exclude={from}/>
             </div>
             <div style={{display:"flex",gap:12,marginTop:16,alignItems:"flex-end",flexWrap:"wrap"}}>
@@ -286,13 +303,13 @@ export default function CustomerPortal(){
       {view==="results"&&(
         <div style={{maxWidth:1000,margin:"0 auto",padding:"28px 24px"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:12}}>
-            <div><button onClick={()=>setView("search")} style={{background:"none",border:"none",color:T.sub,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginBottom:6,display:"block"}}>← Modify search</button><h2 style={{fontSize:22,fontWeight:700,margin:0}}><span style={{color:T.gold}}>{from}</span><span style={{color:T.dim,margin:"0 10px",fontSize:14}}>→</span><span style={{color:T.gold}}>{to}</span></h2><p style={{fontSize:12,color:T.dim,margin:"4px 0 0"}}>{fmtDate(departDate)} · {paxCount} passenger{paxCount>1?"s":""} · {flights.length} flights</p></div>
+            <div><button onClick={()=>setView("search")} style={{background:"none",border:"none",color:T.sub,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginBottom:6,display:"block"}}>â† Modify search</button><h2 style={{fontSize:22,fontWeight:700,margin:0}}><span style={{color:T.gold}}>{from}</span><span style={{color:T.dim,margin:"0 10px",fontSize:14}}>â†’</span><span style={{color:T.gold}}>{to}</span></h2><p style={{fontSize:12,color:T.dim,margin:"4px 0 0"}}>{fmtDate(departDate)} Â· {paxCount} passenger{paxCount>1?"s":""} Â· {flights.length} flights</p></div>
             {flights.length>0&&(<div style={{display:"flex",gap:4}}>{[{v:"departure",l:"Time"},{v:"price",l:"Price"},{v:"duration",l:"Duration"}].map(s=>(<button key={s.v} onClick={()=>setSortBy(s.v)} style={{padding:"6px 14px",borderRadius:8,border:`1px solid ${sortBy===s.v?T.gold+"30":T.border}`,background:sortBy===s.v?T.gold+"08":"transparent",color:sortBy===s.v?T.goldLight:T.sub,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Sort: {s.l}</button>))}</div>)}
           </div>
 
           {searching&&(<div style={{textAlign:"center",padding:"60px 0"}}><div style={{width:40,height:40,border:`3px solid ${T.gold}20`,borderTop:`3px solid ${T.gold}`,borderRadius:"50%",animation:"spin 0.8s linear infinite",margin:"0 auto 16px"}}/><div style={{fontSize:13,color:T.dim}}>Searching available flights...</div></div>)}
 
-          {!searching&&searchMsg&&(<div style={{textAlign:"center",padding:"60px 0"}}><div style={{fontSize:42,marginBottom:16,opacity:0.3}}>✈</div><div style={{fontSize:15,fontWeight:600,marginBottom:8,color:T.sub}}>{searchMsg}</div><button onClick={()=>setView("search")} style={{padding:"10px 24px",borderRadius:10,border:`1px solid ${T.gold}30`,background:T.gold+"08",color:T.goldLight,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Modify Search</button></div>)}
+          {!searching&&searchMsg&&(<div style={{textAlign:"center",padding:"60px 0"}}><div style={{fontSize:42,marginBottom:16,opacity:0.3}}>âœˆ</div><div style={{fontSize:15,fontWeight:600,marginBottom:8,color:T.sub}}>{searchMsg}</div><button onClick={()=>setView("search")} style={{padding:"10px 24px",borderRadius:10,border:`1px solid ${T.gold}30`,background:T.gold+"08",color:T.goldLight,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Modify Search</button></div>)}
 
           {!searching&&flights.map((f:any)=>{
             const lowestPrice=Math.min(...f.seatMap.map((s:any)=>s.price));
@@ -332,15 +349,15 @@ export default function CustomerPortal(){
       {/* BOOKING FLOW */}
       {view==="booking"&&selectedFlight&&(
         <div style={{maxWidth:860,margin:"0 auto",padding:"28px 24px"}}>
-          <button onClick={()=>setView("results")} style={{background:"none",border:"none",color:T.sub,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginBottom:14,display:"block"}}>← Back to results</button>
+          <button onClick={()=>setView("results")} style={{background:"none",border:"none",color:T.sub,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginBottom:14,display:"block"}}>â† Back to results</button>
           <div style={{display:"flex",gap:6,marginBottom:28}}>{["Passenger Details","Add-ons","Payment","Review & Confirm"].map((s,i)=>(<div key={i} style={{flex:1}}><div style={{height:3,borderRadius:2,background:i<step?`linear-gradient(90deg,${T.gold},${T.goldDim})`:i===step-1?T.gold+"60":T.muted,transition:"all 0.4s"}}/><div style={{fontSize:10,color:i<step?T.goldLight:i===step-1?T.gold:T.dim,marginTop:5,fontWeight:600}}>{i+1}. {s}</div></div>))}</div>
 
           {/* Flight strip */}
           <div className="booking-strip" style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:14,padding:"16px 22px",marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
             <div style={{display:"flex",alignItems:"center",gap:20}}>
               <span style={{fontSize:12,fontWeight:700,color:T.gold,fontFamily:"monospace"}}>{selectedFlight.flightNumber}</span>
-              <div style={{display:"flex",alignItems:"center",gap:12}}><div style={{textAlign:"center"}}><div style={{fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.departure.scheduledTime)}</div><div style={{fontSize:10,color:T.dim}}>{selectedFlight.departure.airportCode}</div></div><div style={{color:T.dim,fontSize:12}}>→</div><div style={{textAlign:"center"}}><div style={{fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.arrival.scheduledTime)}</div><div style={{fontSize:10,color:T.dim}}>{selectedFlight.arrival.airportCode}</div></div></div>
-              <span style={{fontSize:11,color:T.dim}}>{fmtDur(selectedFlight.duration)} · {fmtDate(selectedFlight.departure.scheduledTime)}</span>
+              <div style={{display:"flex",alignItems:"center",gap:12}}><div style={{textAlign:"center"}}><div style={{fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.departure.scheduledTime)}</div><div style={{fontSize:10,color:T.dim}}>{selectedFlight.departure.airportCode}</div></div><div style={{color:T.dim,fontSize:12}}>â†’</div><div style={{textAlign:"center"}}><div style={{fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.arrival.scheduledTime)}</div><div style={{fontSize:10,color:T.dim}}>{selectedFlight.arrival.airportCode}</div></div></div>
+              <span style={{fontSize:11,color:T.dim}}>{fmtDur(selectedFlight.duration)} Â· {fmtDate(selectedFlight.departure.scheduledTime)}</span>
             </div>
             <div style={{textAlign:"right"}}><div style={{fontSize:10,color:T.gold,fontWeight:600,textTransform:"uppercase",letterSpacing:0.5}}>{selectedClass}</div>{priceInfo&&<div style={{fontSize:18,fontWeight:700,fontFamily:"monospace"}}>{fmtPrice(priceInfo.total)}</div>}</div>
           </div>
@@ -357,7 +374,7 @@ export default function CustomerPortal(){
               <Inp label="Special Requests (Optional)" value={p.specialRequests} onChange={(e:any)=>updatePax(idx,"specialRequests",e.target.value)} placeholder="Wheelchair assistance, bassinet, etc." style={{width:"100%"}}/>
             </div>))}
             <div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:24,marginBottom:14}}><div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:16}}>Contact Information</div><div style={{display:"flex",gap:12,flexWrap:"wrap"}}><Inp label="Contact Email" required type="email" value={contactEmail} onChange={(e:any)=>setContactEmail(e.target.value)} error={errors.ce} placeholder="Booking confirmation will be sent here"/><Inp label="Contact Phone" required type="tel" value={contactPhone} onChange={(e:any)=>setContactPhone(e.target.value)} error={errors.cp} placeholder="+44 20 7946 0958"/></div></div>
-            <div style={{display:"flex",justifyContent:"flex-end",gap:10,marginTop:20}}><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Continue to Add-ons →</button></div>
+            <div style={{display:"flex",justifyContent:"flex-end",gap:10,marginTop:20}}><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Continue to Add-ons â†’</button></div>
           </div>)}
 
           {/* STEP 2 */}
@@ -368,11 +385,11 @@ export default function CustomerPortal(){
                 <div style={{flex:1}}><div style={{fontSize:14,fontWeight:600}}>{item.label}</div><div style={{fontSize:12,color:T.dim,marginTop:2}}>{item.desc}</div></div>
                 <div style={{display:"flex",alignItems:"center",gap:14}}>
                   <div style={{fontSize:13,fontWeight:600,color:T.sub,fontFamily:"monospace"}}>{fmtPrice(item.price)} {item.unit}</div>
-                  {item.type==="toggle"?(<button onClick={()=>setAddOns(prev=>({...prev,[item.key]:!(prev as any)[item.key]}))} style={{width:48,height:26,borderRadius:13,border:"none",cursor:"pointer",transition:"all 0.2s",background:(addOns as any)[item.key]?T.gold:T.muted,position:"relative"}}><div style={{width:20,height:20,borderRadius:10,background:"white",position:"absolute",top:3,transition:"left 0.2s",left:(addOns as any)[item.key]?25:3}}/></button>):(<div style={{display:"flex",alignItems:"center",gap:8}}><button onClick={()=>setAddOns(prev=>({...prev,extraBaggage:Math.max(0,prev.extraBaggage-1)}))} style={{width:28,height:28,borderRadius:7,border:`1px solid ${T.border}`,background:T.surface,color:T.sub,cursor:"pointer",fontSize:14,fontFamily:"inherit"}}>−</button><span style={{width:20,textAlign:"center",fontSize:14,fontWeight:600,fontFamily:"monospace"}}>{addOns.extraBaggage}</span><button onClick={()=>setAddOns(prev=>({...prev,extraBaggage:Math.min(5,prev.extraBaggage+1)}))} style={{width:28,height:28,borderRadius:7,border:`1px solid ${T.border}`,background:T.surface,color:T.sub,cursor:"pointer",fontSize:14,fontFamily:"inherit"}}>+</button></div>)}
+                  {item.type==="toggle"?(<button onClick={()=>setAddOns(prev=>({...prev,[item.key]:!(prev as any)[item.key]}))} style={{width:48,height:26,borderRadius:13,border:"none",cursor:"pointer",transition:"all 0.2s",background:(addOns as any)[item.key]?T.gold:T.muted,position:"relative"}}><div style={{width:20,height:20,borderRadius:10,background:"white",position:"absolute",top:3,transition:"left 0.2s",left:(addOns as any)[item.key]?25:3}}/></button>):(<div style={{display:"flex",alignItems:"center",gap:8}}><button onClick={()=>setAddOns(prev=>({...prev,extraBaggage:Math.max(0,prev.extraBaggage-1)}))} style={{width:28,height:28,borderRadius:7,border:`1px solid ${T.border}`,background:T.surface,color:T.sub,cursor:"pointer",fontSize:14,fontFamily:"inherit"}}>âˆ’</button><span style={{width:20,textAlign:"center",fontSize:14,fontWeight:600,fontFamily:"monospace"}}>{addOns.extraBaggage}</span><button onClick={()=>setAddOns(prev=>({...prev,extraBaggage:Math.min(5,prev.extraBaggage+1)}))} style={{width:28,height:28,borderRadius:7,border:`1px solid ${T.border}`,background:T.surface,color:T.sub,cursor:"pointer",fontSize:14,fontFamily:"inherit"}}>+</button></div>)}
                 </div>
               </div>))}
             </div>
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:20}}><button onClick={()=>setStep(1)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>← Passenger Details</button><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Continue to Payment →</button></div>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:20}}><button onClick={()=>setStep(1)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>â† Passenger Details</button><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Continue to Payment â†’</button></div>
           </div>)}
 
           {/* STEP 3 */}
@@ -382,12 +399,12 @@ export default function CustomerPortal(){
               {/* Card / Crypto toggle */}
               <div style={{display:"flex",gap:6,marginBottom:20}}>
                 <button onClick={()=>{setPayMethod("card");setCardDeclined(false);setErrors({})}} style={{flex:1,padding:"14px",borderRadius:12,border:`1px solid ${payMethod==="card"?T.gold+"40":T.border}`,background:payMethod==="card"?T.gold+"08":"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>
-                  <div style={{fontSize:18,marginBottom:4}}>💳</div>
+                  <div style={{fontSize:18,marginBottom:4}}>ðŸ’³</div>
                   <div style={{fontSize:12,fontWeight:700,color:payMethod==="card"?T.goldLight:T.sub}}>Credit / Debit Card</div>
                   <div style={{fontSize:10,color:T.dim,marginTop:2}}>Visa, Mastercard, Amex</div>
                 </button>
                 <button onClick={()=>{setPayMethod("crypto");setErrors({});if(cryptoWallets.length===0)fetchCryptoWallets()}} style={{flex:1,padding:"14px",borderRadius:12,border:`1px solid ${payMethod==="crypto"?"#f7931a40":T.border}`,background:payMethod==="crypto"?"#f7931a08":"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"center"}}>
-                  <div style={{fontSize:18,marginBottom:4}}>₿</div>
+                  <div style={{fontSize:18,marginBottom:4}}>â‚¿</div>
                   <div style={{fontSize:12,fontWeight:700,color:payMethod==="crypto"?"#f7931a":T.sub}}>Cryptocurrency</div>
                   <div style={{fontSize:10,color:T.dim,marginTop:2}}>BTC, ETH, USDT & more</div>
                 </button>
@@ -396,14 +413,14 @@ export default function CustomerPortal(){
               {/* Card decline error banner */}
               {payMethod==="card"&&cardDeclined&&(<div style={{padding:"16px 20px",background:"#ef444412",border:"1px solid #ef444430",borderRadius:12,marginBottom:16}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
-                  <span style={{fontSize:20,lineHeight:1}}>⚠</span>
+                  <span style={{fontSize:20,lineHeight:1}}>âš </span>
                   <div>
                     <div style={{fontSize:13,fontWeight:700,color:"#ef4444",marginBottom:4}}>Payment Declined</div>
                     <div style={{fontSize:12,color:"#f87171",marginBottom:10}}>{errors.submit}</div>
                     {cardAttempts>=2&&(<div style={{padding:"10px 14px",background:"#f7931a08",border:"1px solid #f7931a25",borderRadius:8}}>
                       <div style={{fontSize:11,fontWeight:700,color:"#f7931a",marginBottom:3}}>Having trouble with card payments?</div>
                       <div style={{fontSize:11,color:T.sub}}>Cryptocurrency payments are processed instantly with no bank restrictions. Try paying with BTC, ETH, or USDT instead.</div>
-                      <button onClick={()=>{setPayMethod("crypto");setCardDeclined(false);setErrors({});if(cryptoWallets.length===0)fetchCryptoWallets()}} style={{marginTop:8,padding:"8px 18px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#f7931a,#e8850f)",color:"white",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Switch to Crypto →</button>
+                      <button onClick={()=>{setPayMethod("crypto");setCardDeclined(false);setErrors({});if(cryptoWallets.length===0)fetchCryptoWallets()}} style={{marginTop:8,padding:"8px 18px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#f7931a,#e8850f)",color:"white",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Switch to Crypto â†’</button>
                     </div>)}
                   </div>
                 </div>
@@ -413,8 +430,8 @@ export default function CustomerPortal(){
               {payMethod==="card"&&(<div>
                 <div style={{display:"flex",gap:10,marginBottom:20}}>{["visa","mastercard","amex"].map(c=>(<div key={c} style={{padding:"8px 16px",borderRadius:8,background:T.surface,border:`1px solid ${T.border}`,fontSize:11,fontWeight:700,color:T.sub,textTransform:"uppercase",letterSpacing:0.5}}>{c}</div>))}</div>
                 <div style={{display:"flex",gap:12,marginBottom:12,flexWrap:"wrap"}}><Inp label="Cardholder Name" required value={cardName} onChange={(e:any)=>setCardName(e.target.value)} error={errors.cn} placeholder="Name on card"/></div>
-                <div style={{display:"flex",gap:12,marginBottom:12,flexWrap:"wrap"}}><Inp label="Card Number" required value={cardNumber} onChange={(e:any)=>setCardNumber(formatCardNum(e.target.value))} error={errors.cnum} placeholder="4242 4242 4242 4242" style={{flex:3,fontFamily:"'JetBrains Mono',monospace"}} maxLength={19}/><Inp label="Expiry" required value={cardExpiry} onChange={(e:any)=>{let v=e.target.value.replace(/\D/g,"");if(v.length>=2)v=v.slice(0,2)+"/"+v.slice(2,4);setCardExpiry(v)}} error={errors.cexp} placeholder="MM/YY" maxLength={5} style={{flex:1,fontFamily:"monospace"}}/><Inp label="CVV" required type="password" value={cardCVV} onChange={(e:any)=>setCardCVV(e.target.value.replace(/\D/g,"").slice(0,4))} error={errors.cvv} placeholder="•••" maxLength={4} style={{flex:1,fontFamily:"monospace"}}/></div>
-                <div style={{display:"flex",alignItems:"center",gap:8,marginTop:16,padding:"12px 16px",background:T.emerald+"08",border:`1px solid ${T.emerald}15`,borderRadius:10}}><span style={{color:T.emerald,fontSize:14}}>🔒</span><span style={{fontSize:11,color:T.emerald}}>Your payment is secured with 256-bit SSL encryption. Card details are never stored.</span></div>
+                <div style={{display:"flex",gap:12,marginBottom:12,flexWrap:"wrap"}}><Inp label="Card Number" required value={cardNumber} onChange={(e:any)=>setCardNumber(formatCardNum(e.target.value))} error={errors.cnum} placeholder="4242 4242 4242 4242" style={{flex:3,fontFamily:"'JetBrains Mono',monospace"}} maxLength={19}/><Inp label="Expiry" required value={cardExpiry} onChange={(e:any)=>{let v=e.target.value.replace(/\D/g,"");if(v.length>=2)v=v.slice(0,2)+"/"+v.slice(2,4);setCardExpiry(v)}} error={errors.cexp} placeholder="MM/YY" maxLength={5} style={{flex:1,fontFamily:"monospace"}}/><Inp label="CVV" required type="password" value={cardCVV} onChange={(e:any)=>setCardCVV(e.target.value.replace(/\D/g,"").slice(0,4))} error={errors.cvv} placeholder="â€¢â€¢â€¢" maxLength={4} style={{flex:1,fontFamily:"monospace"}}/></div>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginTop:16,padding:"12px 16px",background:T.emerald+"08",border:`1px solid ${T.emerald}15`,borderRadius:10}}><span style={{color:T.emerald,fontSize:14}}>ðŸ”’</span><span style={{fontSize:11,color:T.emerald}}>Your payment is secured with 256-bit SSL encryption. Card details are never stored.</span></div>
               </div>)}
 
               {/* Crypto wallet selection */}
@@ -426,7 +443,7 @@ export default function CustomerPortal(){
                   <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>
                     {cryptoWallets.map((w:any)=>(
                       <button key={w._id} onClick={()=>setSelectedWallet(w)} style={{padding:"12px 18px",borderRadius:10,border:`1px solid ${selectedWallet?._id===w._id?"#f7931a40":T.border}`,background:selectedWallet?._id===w._id?"#f7931a08":"transparent",cursor:"pointer",fontFamily:"inherit",textAlign:"center",minWidth:100}}>
-                        <div style={{fontSize:20,marginBottom:4}}>{w.icon||"₿"}</div>
+                        <div style={{fontSize:20,marginBottom:4}}>{w.icon||"â‚¿"}</div>
                         <div style={{fontSize:13,fontWeight:700,color:selectedWallet?._id===w._id?"#f7931a":T.text}}>{w.symbol}</div>
                         <div style={{fontSize:9,color:T.dim,marginTop:2}}>{w.network}</div>
                       </button>
@@ -439,7 +456,7 @@ export default function CustomerPortal(){
                     <div style={{textAlign:"center",marginBottom:14}}>
                       <div style={{fontSize:11,fontWeight:700,color:"#f7931a",letterSpacing:2,marginBottom:6}}>SEND {selectedWallet.symbol} TO THIS ADDRESS</div>
                       <div style={{fontSize:10,color:T.dim,marginBottom:12}}>Network: {selectedWallet.network}</div>
-                      {/* QR Code placeholder — rendered as visual address block */}
+                      {/* QR Code placeholder â€” rendered as visual address block */}
                       <div style={{display:"inline-block",padding:16,background:"white",borderRadius:12,marginBottom:12}}>
                         <div style={{width:160,height:160,background:`url(https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(selectedWallet.address)}) center/contain no-repeat`}}/>
                       </div>
@@ -449,7 +466,7 @@ export default function CustomerPortal(){
                       </div>
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:8,padding:"12px 14px",background:T.amber+"08",border:`1px solid ${T.amber}15`,borderRadius:10,marginTop:12}}>
-                      <span style={{fontSize:14}}>⚠</span>
+                      <span style={{fontSize:14}}>âš </span>
                       <span style={{fontSize:11,color:T.amber}}>Send ONLY {selectedWallet.symbol} ({selectedWallet.network}) to this address. Sending other tokens may result in permanent loss. Payment confirmation within 1 hour.</span>
                     </div>
                   </div>)}
@@ -458,14 +475,14 @@ export default function CustomerPortal(){
             </div>
             {priceInfo&&(<div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:24,marginBottom:14}}>
               <div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:16}}>Price Breakdown</div>
-              <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}><span style={{color:T.sub}}>Base fare ({paxCount} × {fmtPrice(priceInfo.perPerson)})</span><span style={{fontFamily:"monospace",fontWeight:600}}>{fmtPrice(priceInfo.base)}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}><span style={{color:T.sub}}>Base fare ({paxCount} Ã— {fmtPrice(priceInfo.perPerson)})</span><span style={{fontFamily:"monospace",fontWeight:600}}>{fmtPrice(priceInfo.base)}</span></div>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}><span style={{color:T.sub}}>Taxes & fees (12%)</span><span style={{fontFamily:"monospace",fontWeight:600}}>{fmtPrice(priceInfo.taxes)}</span></div>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}><span style={{color:T.sub}}>Carrier surcharges (3%)</span><span style={{fontFamily:"monospace",fontWeight:600}}>{fmtPrice(priceInfo.surcharges)}</span></div>
               {priceInfo.addonCost>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}><span style={{color:T.sub}}>Add-ons</span><span style={{fontFamily:"monospace",fontWeight:600}}>{fmtPrice(priceInfo.addonCost)}</span></div>}
               <div style={{height:1,background:T.border,margin:"4px 0 14px"}}/>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:16}}><span style={{fontWeight:700}}>Total</span><span style={{fontWeight:700,fontFamily:"monospace",color:T.gold,fontSize:20}}>{fmtPrice(priceInfo.total)}</span></div>
             </div>)}
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:20}}><button onClick={()=>setStep(2)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>← Add-ons</button><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Review Booking →</button></div>
+            <div style={{display:"flex",justifyContent:"space-between",marginTop:20}}><button onClick={()=>setStep(2)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>â† Add-ons</button><button onClick={handleNext} style={{padding:"12px 36px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Review Booking â†’</button></div>
           </div>)}
 
           {/* STEP 4 */}
@@ -474,25 +491,25 @@ export default function CustomerPortal(){
               <div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:16}}>Flight Details</div>
               <div style={{display:"flex",alignItems:"center",gap:24}}>
                 <div style={{textAlign:"center"}}><div style={{fontSize:24,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.departure.scheduledTime)}</div><div style={{fontSize:13,fontWeight:600,color:T.gold}}>{selectedFlight.departure.airportCode}</div><div style={{fontSize:11,color:T.dim}}>{selectedFlight.departure.city}</div></div>
-                <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:11,color:T.sub}}>{fmtDur(selectedFlight.duration)} · {selectedFlight.stops===0?"Direct":`${selectedFlight.stops} stop`}</div><div style={{height:1,background:T.gold+"30",margin:"6px 0"}}/><div style={{fontSize:12,fontWeight:600,color:T.gold}}>{selectedFlight.flightNumber}</div></div>
+                <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:11,color:T.sub}}>{fmtDur(selectedFlight.duration)} Â· {selectedFlight.stops===0?"Direct":`${selectedFlight.stops} stop`}</div><div style={{height:1,background:T.gold+"30",margin:"6px 0"}}/><div style={{fontSize:12,fontWeight:600,color:T.gold}}>{selectedFlight.flightNumber}</div></div>
                 <div style={{textAlign:"center"}}><div style={{fontSize:24,fontWeight:700,fontFamily:"monospace"}}>{fmtTime(selectedFlight.arrival.scheduledTime)}</div><div style={{fontSize:13,fontWeight:600,color:T.gold}}>{selectedFlight.arrival.airportCode}</div><div style={{fontSize:11,color:T.dim}}>{selectedFlight.arrival.city}</div></div>
               </div>
               <div style={{marginTop:14,display:"flex",gap:12,flexWrap:"wrap"}}><span style={{fontSize:11,color:T.sub,background:T.surface,padding:"4px 10px",borderRadius:6}}>Date: {fmtDate(selectedFlight.departure.scheduledTime)}</span><span style={{fontSize:11,color:T.gold,background:T.gold+"08",padding:"4px 10px",borderRadius:6,fontWeight:600}}>{cap(selectedClass)} Class</span><span style={{fontSize:11,color:T.sub,background:T.surface,padding:"4px 10px",borderRadius:6}}>{paxCount} passenger{paxCount>1?"s":""}</span></div>
             </div>
             <div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:24,marginBottom:14}}>
               <div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:16}}>Passengers</div>
-              {passengers.map((p,i)=>(<div key={i} style={{padding:"12px 0",borderBottom:i<passengers.length-1?`1px solid ${T.border}`:"none"}}><div style={{display:"flex",justifyContent:"space-between"}}><div><div style={{fontSize:14,fontWeight:600}}>{p.firstName} {p.lastName}</div><div style={{fontSize:11,color:T.dim}}>{p.nationality} · Passport: {p.passportNumber} · Meal: {cap(p.mealPreference)}</div></div>{i===0&&<span style={{fontSize:9,fontWeight:700,color:T.gold,background:T.gold+"10",padding:"3px 8px",borderRadius:4,height:"fit-content"}}>LEAD</span>}</div></div>))}
+              {passengers.map((p,i)=>(<div key={i} style={{padding:"12px 0",borderBottom:i<passengers.length-1?`1px solid ${T.border}`:"none"}}><div style={{display:"flex",justifyContent:"space-between"}}><div><div style={{fontSize:14,fontWeight:600}}>{p.firstName} {p.lastName}</div><div style={{fontSize:11,color:T.dim}}>{p.nationality} Â· Passport: {p.passportNumber} Â· Meal: {cap(p.mealPreference)}</div></div>{i===0&&<span style={{fontSize:9,fontWeight:700,color:T.gold,background:T.gold+"10",padding:"3px 8px",borderRadius:4,height:"fit-content"}}>LEAD</span>}</div></div>))}
             </div>
-            {priceInfo&&priceInfo.addonCost>0&&(<div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:24,marginBottom:14}}><div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:12}}>Add-ons</div>{addOns.extraBaggage>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Extra Baggage × {addOns.extraBaggage}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(addOns.extraBaggage*75)}</span></div>}{addOns.loungeAccess&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Lounge Access × {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*85)}</span></div>}{addOns.priorityBoarding&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Priority Boarding × {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*25)}</span></div>}{addOns.travelInsurance&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Travel Insurance × {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*49)}</span></div>}{addOns.mealUpgrade&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Meal Upgrade × {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*45)}</span></div>}</div>)}
+            {priceInfo&&priceInfo.addonCost>0&&(<div style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:24,marginBottom:14}}><div style={{fontSize:13,fontWeight:700,color:T.gold,marginBottom:12}}>Add-ons</div>{addOns.extraBaggage>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Extra Baggage Ã— {addOns.extraBaggage}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(addOns.extraBaggage*75)}</span></div>}{addOns.loungeAccess&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Lounge Access Ã— {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*85)}</span></div>}{addOns.priorityBoarding&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Priority Boarding Ã— {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*25)}</span></div>}{addOns.travelInsurance&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Travel Insurance Ã— {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*49)}</span></div>}{addOns.mealUpgrade&&<div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:T.sub,marginBottom:6}}><span>Meal Upgrade Ã— {paxCount}</span><span style={{fontFamily:"monospace"}}>{fmtPrice(paxCount*45)}</span></div>}</div>)}
             {priceInfo&&(<div style={{background:T.card,border:`1px solid ${T.gold}20`,borderRadius:16,padding:24,marginBottom:14}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
               <div><div style={{fontSize:12,color:T.sub}}>Total Amount</div><div style={{fontSize:28,fontWeight:700,fontFamily:"monospace",color:T.gold}}>{fmtPrice(priceInfo.total)}</div><div style={{fontSize:11,color:T.dim}}>{payMethod==="card"?`Card ending ${cardNumber.slice(-4)}`:`Payment via ${selectedWallet?.symbol||"Crypto"}`}</div></div>
               <div style={{textAlign:"right"}}><div style={{fontSize:11,color:T.dim,marginBottom:8}}>By confirming, you agree to SKYLUX Airways terms & conditions</div><button onClick={confirmBooking} disabled={bookingLoading} style={{padding:"14px 40px",borderRadius:12,border:"none",background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:15,fontWeight:700,cursor:bookingLoading?"wait":"pointer",fontFamily:"inherit",opacity:bookingLoading?0.7:1}}>{bookingLoading?"Processing Payment...":"Confirm & Pay"}</button></div>
             </div>{errors.submit&&<div style={{marginTop:12,padding:"14px 18px",background:T.red+"10",border:`1px solid ${T.red}20`,borderRadius:10}}>
-              <div style={{fontSize:12,color:T.red,fontWeight:600,marginBottom:4}}>⚠ Payment Failed</div>
+              <div style={{fontSize:12,color:T.red,fontWeight:600,marginBottom:4}}>âš  Payment Failed</div>
               <div style={{fontSize:12,color:"#f87171",marginBottom:payMethod==="card"?10:0}}>{errors.submit}</div>
-              {payMethod==="card"&&<button onClick={()=>{setPayMethod("crypto");setStep(3);setCardDeclined(false);setErrors({});if(cryptoWallets.length===0)fetchCryptoWallets()}} style={{padding:"8px 18px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#f7931a,#e8850f)",color:"white",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Try Cryptocurrency Instead →</button>}
+              {payMethod==="card"&&<button onClick={()=>{setPayMethod("crypto");setStep(3);setCardDeclined(false);setErrors({});if(cryptoWallets.length===0)fetchCryptoWallets()}} style={{padding:"8px 18px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#f7931a,#e8850f)",color:"white",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"inherit"}}>Try Cryptocurrency Instead â†’</button>}
             </div>}</div>)}
-            <div style={{display:"flex",justifyContent:"flex-start",marginTop:12}}><button onClick={()=>setStep(3)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>← Back to Payment</button></div>
+            <div style={{display:"flex",justifyContent:"flex-start",marginTop:12}}><button onClick={()=>setStep(3)} style={{padding:"12px 28px",borderRadius:12,border:`1px solid ${T.border}`,background:"transparent",color:T.sub,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>â† Back to Payment</button></div>
           </div>)}
         </div>
       )}
@@ -501,7 +518,7 @@ export default function CustomerPortal(){
       {view==="confirmation"&&bookingResult&&(
         <div style={{maxWidth:700,margin:"0 auto",padding:"40px 24px"}}>
           <div style={{background:T.card,border:`1px solid ${T.gold}20`,borderRadius:20,overflow:"hidden"}}>
-            <div style={{background:`linear-gradient(135deg,${T.gold}12,${T.gold}05)`,padding:"32px 28px",textAlign:"center",borderBottom:`1px solid ${T.gold}15`}}><div style={{width:56,height:56,borderRadius:16,background:T.emerald+"15",border:`1px solid ${T.emerald}25`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:24}}>✓</div><h2 style={{fontSize:24,fontWeight:800,marginBottom:4}}>Booking Confirmed</h2><p style={{fontSize:13,color:T.sub}}>Your reservation has been confirmed and your e-ticket has been issued</p></div>
+            <div style={{background:`linear-gradient(135deg,${T.gold}12,${T.gold}05)`,padding:"32px 28px",textAlign:"center",borderBottom:`1px solid ${T.gold}15`}}><div style={{width:56,height:56,borderRadius:16,background:T.emerald+"15",border:`1px solid ${T.emerald}25`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:24}}>âœ“</div><h2 style={{fontSize:24,fontWeight:800,marginBottom:4}}>Booking Confirmed</h2><p style={{fontSize:13,color:T.sub}}>Your reservation has been confirmed and your e-ticket has been issued</p></div>
             <div style={{padding:"20px 28px",textAlign:"center",borderBottom:`1px solid ${T.border}`}}><div style={{fontSize:10,color:T.dim,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Booking Reference</div><div style={{fontSize:32,fontWeight:800,color:T.gold,fontFamily:"'JetBrains Mono',monospace",letterSpacing:4}}>{bookingResult.bookingReference}</div><div style={{fontSize:11,color:T.dim,marginTop:4}}>Confirmation sent to {contactEmail}</div></div>
             <div style={{padding:"24px 28px",borderBottom:`1px solid ${T.border}`}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -513,21 +530,21 @@ export default function CustomerPortal(){
               </div>
               <div style={{marginTop:14,display:"flex",gap:10,flexWrap:"wrap"}}><span style={{fontSize:11,color:T.sub,background:T.surface,padding:"4px 10px",borderRadius:6}}>{fmtDate(selectedFlight.departure.scheduledTime)}</span><span style={{fontSize:11,color:T.gold,background:T.gold+"0a",padding:"4px 10px",borderRadius:6,fontWeight:600}}>{cap(selectedClass)} Class</span><span style={{fontSize:11,color:T.sub,background:T.surface,padding:"4px 10px",borderRadius:6}}>{paxCount} passenger{paxCount>1?"s":""}</span></div>
             </div>
-            <div style={{padding:"20px 28px",borderBottom:`1px solid ${T.border}`}}>{passengers.map((p,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<passengers.length-1?`1px solid ${T.border}`:"none"}}><span style={{fontSize:13,fontWeight:600}}>{p.firstName} {p.lastName}</span><span style={{fontSize:11,color:T.dim}}>{p.nationality} · {p.passportNumber}</span></div>))}</div>
+            <div style={{padding:"20px 28px",borderBottom:`1px solid ${T.border}`}}>{passengers.map((p,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<passengers.length-1?`1px solid ${T.border}`:"none"}}><span style={{fontSize:13,fontWeight:600}}>{p.firstName} {p.lastName}</span><span style={{fontSize:11,color:T.dim}}>{p.nationality} Â· {p.passportNumber}</span></div>))}</div>
             <div style={{padding:"20px 28px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontSize:13,color:T.sub}}>Total {payMethod==="crypto"?"Due":"Paid"}</span><span style={{fontSize:22,fontWeight:700,fontFamily:"monospace",color:T.gold}}>{fmtPrice(bookingResult.payment?.amount||priceInfo?.total||0)}</span></div>
             {/* Crypto payment details */}
             {cryptoPayResult&&(<div style={{padding:"0 28px 24px"}}>
               <div style={{background:T.surface,border:"1px solid #f7931a25",borderRadius:14,padding:20}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
                   <div style={{width:8,height:8,borderRadius:4,background:"#f7931a",animation:"pulse 1.5s infinite"}}/>
-                  <span style={{fontSize:12,fontWeight:700,color:"#f7931a"}}>CRYPTO PAYMENT — AWAITING CONFIRMATION</span>
+                  <span style={{fontSize:12,fontWeight:700,color:"#f7931a"}}>CRYPTO PAYMENT â€” AWAITING CONFIRMATION</span>
                 </div>
                 <div style={{fontSize:11,color:T.sub,marginBottom:12}}>Send <strong style={{color:"#f7931a"}}>{cryptoPayResult.symbol}</strong> equivalent of <strong style={{color:T.gold}}>${cryptoPayResult.amountUSD?.toLocaleString()}</strong> to the address below. Our team has been notified and will confirm your payment shortly.</div>
                 <div style={{padding:"12px 16px",background:T.card,border:`1px solid ${T.border}`,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
                   <div style={{fontSize:13,fontFamily:"'JetBrains Mono',monospace",color:"#f7931a",wordBreak:"break-all",flex:1}}>{cryptoPayResult.walletAddress}</div>
                   <button onClick={()=>navigator.clipboard.writeText(cryptoPayResult.walletAddress)} style={{padding:"6px 14px",borderRadius:6,border:"1px solid #f7931a30",background:"#f7931a10",color:"#f7931a",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>Copy</button>
                 </div>
-                <div style={{fontSize:10,color:T.dim,marginTop:8}}>Network: {cryptoPayResult.network} · Expires: {new Date(cryptoPayResult.expiresAt).toLocaleString()}</div>
+                <div style={{fontSize:10,color:T.dim,marginTop:8}}>Network: {cryptoPayResult.network} Â· Expires: {new Date(cryptoPayResult.expiresAt).toLocaleString()}</div>
               </div>
             </div>)}
           </div>
@@ -541,11 +558,11 @@ export default function CustomerPortal(){
           <h2 style={{fontSize:22,fontWeight:700,marginBottom:20}}>My Bookings</h2>
           {!user&&(<div style={{textAlign:"center",padding:"50px 0"}}><div style={{fontSize:15,color:T.sub,marginBottom:14}}>Sign in to view your bookings</div><Link href="/auth" style={{display:"inline-block",padding:"10px 24px",borderRadius:10,background:`linear-gradient(135deg,${T.gold},${T.goldDim})`,color:"#0a0f1e",fontSize:13,fontWeight:700,textDecoration:"none"}}>Sign In</Link></div>)}
           {user&&bookingsLoading&&<div style={{textAlign:"center",padding:"50px 0",color:T.dim}}>Loading your bookings...</div>}
-          {user&&!bookingsLoading&&myBookings.length===0&&(<div style={{textAlign:"center",padding:"50px 0"}}><div style={{fontSize:42,marginBottom:12,opacity:0.2}}>✈</div><div style={{fontSize:14,color:T.dim,marginBottom:12}}>No bookings yet</div><button onClick={()=>setView("search")} style={{padding:"10px 24px",borderRadius:10,border:`1px solid ${T.gold}30`,background:T.gold+"08",color:T.goldLight,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Search Flights</button></div>)}
+          {user&&!bookingsLoading&&myBookings.length===0&&(<div style={{textAlign:"center",padding:"50px 0"}}><div style={{fontSize:42,marginBottom:12,opacity:0.2}}>âœˆ</div><div style={{fontSize:14,color:T.dim,marginBottom:12}}>No bookings yet</div><button onClick={()=>setView("search")} style={{padding:"10px 24px",borderRadius:10,border:`1px solid ${T.gold}30`,background:T.gold+"08",color:T.goldLight,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Search Flights</button></div>)}
           {myBookings.map((b:any)=>{const flight=b.flights?.[0]?.flight;const sc=b.status==="confirmed"?T.emerald:b.status==="cancelled"?T.red:T.amber;return(
             <div key={b._id} style={{background:T.card,border:`1px solid ${T.border}`,borderRadius:16,padding:22,marginBottom:10}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12}}>
-                <div><div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}><span style={{fontSize:14,fontWeight:700,color:T.gold,fontFamily:"monospace"}}>{b.bookingReference}</span><span style={{padding:"3px 10px",borderRadius:6,fontSize:10,fontWeight:700,background:sc+"12",color:sc,textTransform:"uppercase"}}>{b.status}</span></div>{flight&&(<div style={{display:"flex",alignItems:"center",gap:12}}><span style={{fontSize:16,fontWeight:700}}>{flight.departure?.airportCode}</span><span style={{color:T.dim}}>→</span><span style={{fontSize:16,fontWeight:700}}>{flight.arrival?.airportCode}</span><span style={{fontSize:11,color:T.dim,marginLeft:8}}>{flight.flightNumber}</span><span style={{fontSize:11,color:T.dim}}>{new Date(flight.departure?.scheduledTime).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span></div>)}<div style={{fontSize:11,color:T.dim,marginTop:4}}>{cap(b.cabinClass)} · {b.passengers?.length||1} passenger{(b.passengers?.length||1)>1?"s":""}</div></div>
+                <div><div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}><span style={{fontSize:14,fontWeight:700,color:T.gold,fontFamily:"monospace"}}>{b.bookingReference}</span><span style={{padding:"3px 10px",borderRadius:6,fontSize:10,fontWeight:700,background:sc+"12",color:sc,textTransform:"uppercase"}}>{b.status}</span></div>{flight&&(<div style={{display:"flex",alignItems:"center",gap:12}}><span style={{fontSize:16,fontWeight:700}}>{flight.departure?.airportCode}</span><span style={{color:T.dim}}>â†’</span><span style={{fontSize:16,fontWeight:700}}>{flight.arrival?.airportCode}</span><span style={{fontSize:11,color:T.dim,marginLeft:8}}>{flight.flightNumber}</span><span style={{fontSize:11,color:T.dim}}>{new Date(flight.departure?.scheduledTime).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span></div>)}<div style={{fontSize:11,color:T.dim,marginTop:4}}>{cap(b.cabinClass)} Â· {b.passengers?.length||1} passenger{(b.passengers?.length||1)>1?"s":""}</div></div>
                 <div style={{textAlign:"right"}}><div style={{fontSize:18,fontWeight:700,fontFamily:"monospace",color:T.gold}}>{fmtPrice(b.payment?.amount||0)}</div><div style={{fontSize:10,color:T.dim,marginTop:2}}>{new Date(b.createdAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</div></div>
               </div>
             </div>

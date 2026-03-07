@@ -3,11 +3,11 @@ import { connectDB } from "@/lib/database";
 import Flight from "@/models/Flight";
 import "@/models/Aircraft";
 
-/* ══════════════════════════════════════════════════════════════════
-   SKYLUX Flight Search — Universal Coverage
-   DB flights first → fallback to dynamic generation for ANY route
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SKYLUX Flight Search â€” Universal Coverage
+   DB flights first â†’ fallback to dynamic generation for ANY route
    ANY origin + ANY destination = flights ALWAYS available
-   ══════════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   LHR:{c:"London",co:"United Kingdom",la:51.47,lo:-0.46,n:"Heathrow"},
@@ -18,14 +18,14 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   BHX:{c:"Birmingham",co:"United Kingdom",la:52.45,lo:-1.75,n:"Birmingham"},
   CDG:{c:"Paris",co:"France",la:49.01,lo:2.55,n:"Charles de Gaulle"},
   ORY:{c:"Paris",co:"France",la:48.72,lo:2.37,n:"Orly"},
-  NCE:{c:"Nice",co:"France",la:43.66,lo:7.22,n:"Côte d'Azur"},
-  LYS:{c:"Lyon",co:"France",la:45.73,lo:5.08,n:"Saint-Exupéry"},
+  NCE:{c:"Nice",co:"France",la:43.66,lo:7.22,n:"CÃ´te d'Azur"},
+  LYS:{c:"Lyon",co:"France",la:45.73,lo:5.08,n:"Saint-ExupÃ©ry"},
   MRS:{c:"Marseille",co:"France",la:43.44,lo:5.22,n:"Provence"},
   AMS:{c:"Amsterdam",co:"Netherlands",la:52.31,lo:4.77,n:"Schiphol"},
   FRA:{c:"Frankfurt",co:"Germany",la:50.03,lo:8.57,n:"Frankfurt"},
   MUC:{c:"Munich",co:"Germany",la:48.35,lo:11.79,n:"Franz Josef Strauss"},
   BER:{c:"Berlin",co:"Germany",la:52.37,lo:13.52,n:"Brandenburg"},
-  DUS:{c:"Düsseldorf",co:"Germany",la:51.28,lo:6.77,n:"Düsseldorf"},
+  DUS:{c:"DÃ¼sseldorf",co:"Germany",la:51.28,lo:6.77,n:"DÃ¼sseldorf"},
   HAM:{c:"Hamburg",co:"Germany",la:53.63,lo:9.99,n:"Hamburg"},
   FCO:{c:"Rome",co:"Italy",la:41.8,lo:12.25,n:"Fiumicino"},
   MXP:{c:"Milan",co:"Italy",la:45.63,lo:8.72,n:"Malpensa"},
@@ -37,7 +37,7 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   PMI:{c:"Palma",co:"Spain",la:39.55,lo:2.74,n:"Palma de Mallorca"},
   IBZ:{c:"Ibiza",co:"Spain",la:38.87,lo:1.37,n:"Ibiza"},
   LIS:{c:"Lisbon",co:"Portugal",la:38.77,lo:-9.13,n:"Humberto Delgado"},
-  OPO:{c:"Porto",co:"Portugal",la:41.24,lo:-8.68,n:"Francisco Sá Carneiro"},
+  OPO:{c:"Porto",co:"Portugal",la:41.24,lo:-8.68,n:"Francisco SÃ¡ Carneiro"},
   ZRH:{c:"Zurich",co:"Switzerland",la:47.46,lo:8.55,n:"Zurich"},
   GVA:{c:"Geneva",co:"Switzerland",la:46.24,lo:6.11,n:"Geneva"},
   VIE:{c:"Vienna",co:"Austria",la:48.11,lo:16.57,n:"Schwechat"},
@@ -50,15 +50,15 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   DUB:{c:"Dublin",co:"Ireland",la:53.42,lo:-6.27,n:"Dublin"},
   ATH:{c:"Athens",co:"Greece",la:37.94,lo:23.94,n:"Eleftherios Venizelos"},
   IST:{c:"Istanbul",co:"Turkey",la:41.26,lo:28.74,n:"Istanbul"},
-  SAW:{c:"Istanbul",co:"Turkey",la:40.9,lo:29.31,n:"Sabiha Gökçen"},
+  SAW:{c:"Istanbul",co:"Turkey",la:40.9,lo:29.31,n:"Sabiha GÃ¶kÃ§en"},
   AYT:{c:"Antalya",co:"Turkey",la:36.9,lo:30.8,n:"Antalya"},
   WAW:{c:"Warsaw",co:"Poland",la:52.17,lo:20.97,n:"Chopin"},
-  PRG:{c:"Prague",co:"Czech Republic",la:50.1,lo:14.26,n:"Václav Havel"},
+  PRG:{c:"Prague",co:"Czech Republic",la:50.1,lo:14.26,n:"VÃ¡clav Havel"},
   BUD:{c:"Budapest",co:"Hungary",la:47.44,lo:19.26,n:"Ferenc Liszt"},
-  OTP:{c:"Bucharest",co:"Romania",la:44.57,lo:26.09,n:"Henri Coandă"},
+  OTP:{c:"Bucharest",co:"Romania",la:44.57,lo:26.09,n:"Henri CoandÄƒ"},
   SOF:{c:"Sofia",co:"Bulgaria",la:42.7,lo:23.41,n:"Sofia"},
   BEG:{c:"Belgrade",co:"Serbia",la:44.82,lo:20.31,n:"Nikola Tesla"},
-  ZAG:{c:"Zagreb",co:"Croatia",la:45.74,lo:16.07,n:"Franjo Tuđman"},
+  ZAG:{c:"Zagreb",co:"Croatia",la:45.74,lo:16.07,n:"Franjo TuÄ‘man"},
   KEF:{c:"Reykjavik",co:"Iceland",la:63.99,lo:-22.62,n:"Keflavik"},
   DXB:{c:"Dubai",co:"UAE",la:25.25,lo:55.36,n:"Dubai International"},
   DWC:{c:"Dubai",co:"UAE",la:24.9,lo:55.16,n:"Al Maktoum"},
@@ -92,13 +92,30 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   LAS:{c:"Las Vegas",co:"USA",la:36.08,lo:-115.15,n:"Harry Reid"},
   MSP:{c:"Minneapolis",co:"USA",la:44.88,lo:-93.22,n:"MSP"},
   DTW:{c:"Detroit",co:"USA",la:42.21,lo:-83.35,n:"Detroit Metro"},
+  // Michigan (USA)
+  MQT: { city: "Marquette", country: "USA", lat: 46.3536, lng: -87.3953, name: "Sawyer International" },
+  GRR: { city: "Grand Rapids", country: "USA", lat: 42.8808, lng: -85.5228, name: "Gerald R. Ford International" },
+  FNT: { city: "Flint", country: "USA", lat: 42.9654, lng: -83.7436, name: "Bishop International" },
+  LAN: { city: "Lansing", country: "USA", lat: 42.7787, lng: -84.5874, name: "Capital Region International" },
+  MBS: { city: "Saginaw", country: "USA", lat: 43.5329, lng: -84.0796, name: "MBS International" },
+  AZO: { city: "Kalamazoo", country: "USA", lat: 42.2350, lng: -85.5521, name: "Kalamazoo Battle Creek International" },
+  TVC: { city: "Traverse City", country: "USA", lat: 44.7414, lng: -85.5822, name: "Cherry Capital" },
+  MKG: { city: "Muskegon", country: "USA", lat: 43.1695, lng: -86.2382, name: "Muskegon County" },
+  PLN: { city: "Pellston", country: "USA", lat: 45.5709, lng: -84.7967, name: "Pellston Regional" },
+  CIU: { city: "Sault Ste. Marie", country: "USA", lat: 46.2508, lng: -84.4724, name: "Chippewa County International" },
+  ESC: { city: "Escanaba", country: "USA", lat: 45.7227, lng: -87.0937, name: "Delta County" },
+  IMT: { city: "Iron Mountain", country: "USA", lat: 45.8184, lng: -88.1146, name: "Ford Airport" },
+  APN: { city: "Alpena", country: "USA", lat: 45.0781, lng: -83.5603, name: "Alpena County Regional" },
+  CMX: { city: "Hancock", country: "USA", lat: 47.1684, lng: -88.4891, name: "Houghton County Memorial" },
+  IWD: { city: "Ironwood", country: "USA", lat: 46.5275, lng: -90.1314, name: "Gogebic-Iron County" },
+  MBL: { city: "Manistee", country: "USA", lat: 44.2725, lng: -86.2469, name: "Manistee County Blacker" },
   MCO:{c:"Orlando",co:"USA",la:28.43,lo:-81.31,n:"Orlando International"},
   HNL:{c:"Honolulu",co:"USA",la:21.32,lo:-157.92,n:"Daniel K. Inouye"},
   YYZ:{c:"Toronto",co:"Canada",la:43.68,lo:-79.63,n:"Pearson"},
   YVR:{c:"Vancouver",co:"Canada",la:49.19,lo:-123.18,n:"Vancouver"},
   YUL:{c:"Montreal",co:"Canada",la:45.47,lo:-73.74,n:"Trudeau"},
-  MEX:{c:"Mexico City",co:"Mexico",la:19.44,lo:-99.07,n:"Benito Juárez"},
-  CUN:{c:"Cancún",co:"Mexico",la:21.04,lo:-86.87,n:"Cancún International"},
+  MEX:{c:"Mexico City",co:"Mexico",la:19.44,lo:-99.07,n:"Benito JuÃ¡rez"},
+  CUN:{c:"CancÃºn",co:"Mexico",la:21.04,lo:-86.87,n:"CancÃºn International"},
   NRT:{c:"Tokyo",co:"Japan",la:35.76,lo:140.39,n:"Narita"},
   HND:{c:"Tokyo",co:"Japan",la:35.55,lo:139.78,n:"Haneda"},
   KIX:{c:"Osaka",co:"Japan",la:34.43,lo:135.24,n:"Kansai"},
@@ -124,7 +141,7 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   DAC:{c:"Dhaka",co:"Bangladesh",la:23.84,lo:90.4,n:"Hazrat Shahjalal"},
   ISB:{c:"Islamabad",co:"Pakistan",la:33.62,lo:72.83,n:"Islamabad International"},
   KHI:{c:"Karachi",co:"Pakistan",la:24.91,lo:67.16,n:"Jinnah"},
-  MLE:{c:"Malé",co:"Maldives",la:4.19,lo:73.53,n:"Velana"},
+  MLE:{c:"MalÃ©",co:"Maldives",la:4.19,lo:73.53,n:"Velana"},
   JNB:{c:"Johannesburg",co:"South Africa",la:-26.14,lo:28.24,n:"OR Tambo"},
   CPT:{c:"Cape Town",co:"South Africa",la:-33.97,lo:18.6,n:"Cape Town International"},
   NBO:{c:"Nairobi",co:"Kenya",la:-1.32,lo:36.93,n:"Jomo Kenyatta"},
@@ -135,14 +152,14 @@ const AP: Record<string,{c:string;co:string;la:number;lo:number;n:string}> = {
   ADD:{c:"Addis Ababa",co:"Ethiopia",la:8.98,lo:38.8,n:"Bole"},
   DAR:{c:"Dar es Salaam",co:"Tanzania",la:-6.88,lo:39.2,n:"Julius Nyerere"},
   MRU:{c:"Mauritius",co:"Mauritius",la:-20.43,lo:57.68,n:"SSR International"},
-  SEZ:{c:"Mahé",co:"Seychelles",la:-4.67,lo:55.52,n:"Seychelles International"},
+  SEZ:{c:"MahÃ©",co:"Seychelles",la:-4.67,lo:55.52,n:"Seychelles International"},
   NAS:{c:"Nassau",co:"Bahamas",la:25.04,lo:-77.47,n:"Lynden Pindling"},
-  GRU:{c:"São Paulo",co:"Brazil",la:-23.43,lo:-46.47,n:"Guarulhos"},
-  GIG:{c:"Rio de Janeiro",co:"Brazil",la:-22.81,lo:-43.25,n:"Galeão"},
+  GRU:{c:"SÃ£o Paulo",co:"Brazil",la:-23.43,lo:-46.47,n:"Guarulhos"},
+  GIG:{c:"Rio de Janeiro",co:"Brazil",la:-22.81,lo:-43.25,n:"GaleÃ£o"},
   EZE:{c:"Buenos Aires",co:"Argentina",la:-34.82,lo:-58.54,n:"Ezeiza"},
-  BOG:{c:"Bogotá",co:"Colombia",la:4.7,lo:-74.15,n:"El Dorado"},
+  BOG:{c:"BogotÃ¡",co:"Colombia",la:4.7,lo:-74.15,n:"El Dorado"},
   SCL:{c:"Santiago",co:"Chile",la:-33.39,lo:-70.79,n:"Arturo Merino"},
-  LIM:{c:"Lima",co:"Peru",la:-12.02,lo:-77.11,n:"Jorge Chávez"},
+  LIM:{c:"Lima",co:"Peru",la:-12.02,lo:-77.11,n:"Jorge ChÃ¡vez"},
   SYD:{c:"Sydney",co:"Australia",la:-33.95,lo:151.18,n:"Kingsford Smith"},
   MEL:{c:"Melbourne",co:"Australia",la:-37.67,lo:144.84,n:"Tullamarine"},
   BNE:{c:"Brisbane",co:"Australia",la:-27.38,lo:153.12,n:"Brisbane"},
@@ -221,7 +238,7 @@ export async function GET(req: NextRequest) {
     const page = parseInt(sp.get("page") || "1");
     const limit = Math.min(parseInt(sp.get("limit") || "20"), 50);
 
-    // ── 1. Try real DB flights ──
+    // â”€â”€ 1. Try real DB flights â”€â”€
     const q: any = { isActive: true, status: { $nin: ["cancelled", "arrived"] } };
     if (from) { q.$or = [{ "departure.airportCode": from }, { "departure.city": { $regex: from, $options: "i" } }]; }
     if (to) {
@@ -240,18 +257,18 @@ export async function GET(req: NextRequest) {
     const dbFlights = await Flight.find(q).populate("aircraft", "name manufacturer model category specs").sort(sort).skip((page - 1) * limit).limit(limit).lean();
     let flights: any[] = [...dbFlights];
 
-    // ── 2. If no DB results, generate for any route ──
+    // â”€â”€ 2. If no DB results, generate for any route â”€â”€
     if (flights.length === 0 && from && to && departDate) {
       flights = genFlights(from, to, departDate);
     }
-    // ── 3. If very few DB results, pad with generated ──
+    // â”€â”€ 3. If very few DB results, pad with generated â”€â”€
     if (flights.length > 0 && flights.length < 3 && from && to && departDate) {
       const gen = genFlights(from, to, departDate);
       const existing = new Set(flights.map((f: any) => f.flightNumber));
       for (const g of gen) { if (!existing.has(g.flightNumber) && flights.length < 6) { flights.push(g); existing.add(g.flightNumber); } }
     }
 
-    // ── Post-filter ──
+    // â”€â”€ Post-filter â”€â”€
     let filtered = flights.filter((f: any) => {
       if (passengers > 1) { const ok = f.seatMap?.some((s: any) => s.availableSeats >= passengers); if (!ok) return false; }
       if (maxPrice && cabinClass) { const s = f.seatMap?.find((s: any) => s.class === cabinClass); if (!s || s.price > maxPrice) return false; }
