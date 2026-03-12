@@ -49,6 +49,8 @@ export interface IBookingDocument extends Document {
   eTicketSent: boolean;
   cancellationReason?: string;
   cancelledAt?: Date;
+  amadeusPNR?: string;
+  source?: "amadeus" | "generated" | "manual";
 }
 
 const BookingSchema = new Schema<IBookingDocument>(
@@ -103,6 +105,8 @@ const BookingSchema = new Schema<IBookingDocument>(
     eTicketSent: { type: Boolean, default: false },
     cancellationReason: String,
     cancelledAt: Date,
+    amadeusPNR: { type: String },
+    source: { type: String, enum: ["amadeus", "generated", "manual"], default: "generated" },
   },
   { timestamps: true }
 );

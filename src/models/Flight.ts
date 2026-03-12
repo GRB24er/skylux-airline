@@ -26,6 +26,11 @@ export interface IFlightDocument extends Document {
   flightNumber: string;
   type: "commercial" | "private-jet";
   airline: string;
+  operatingAirline?: { code: string; name: string };
+  marketingAirline?: { code: string; name: string };
+  isCodeshare: boolean;
+  realFlightData: boolean;
+  amadeusPNR?: string;
   departure: {
     airport: string; airportCode: string; city: string; country: string;
     terminal?: string; gate?: string; scheduledTime: Date; actualTime?: Date; timezone: string;
@@ -51,6 +56,10 @@ export interface IFlightDocument extends Document {
   stopDetails?: { airport: string; airportCode: string; duration: number }[];
   crew: mongoose.Types.ObjectId[];
   isActive: boolean;
+  liveTracking?: {
+    latitude: number; longitude: number; altitude: number;
+    speed: number; heading: number; lastUpdated: Date;
+  };
 }
 
 const FlightSchema = new Schema<IFlightDocument>(
@@ -60,11 +69,22 @@ const FlightSchema = new Schema<IFlightDocument>(
       required: true,
       unique: true,
       uppercase: true,
-      match: [/^SX\s?\d{3,4}$/, "Flight number must follow format SX XXX or SX XXXX"],
+      match: [/^[A-Z0-9]{2}\s?\d{1,4}$/, "Flight number must follow format XX 123 (IATA carrier + number)"],
       index: true,
     },
     type: { type: String, enum: ["commercial", "private-jet"], required: true, index: true },
     airline: { type: String, default: "SKYLUX Airways" },
+    operatingAirline: {
+      code: { type: String },
+      name: { type: String },
+    },
+    marketingAirline: {
+      code: { type: String },
+      name: { type: String },
+    },
+    isCodeshare: { type: Boolean, default: false },
+    realFlightData: { type: Boolean, default: false },
+    amadeusPNR: { type: String },
     departure: { type: AirportSchema, required: true },
     arrival: { type: AirportSchema, required: true },
     duration: { type: Number, required: true, min: 1 },
@@ -90,6 +110,14 @@ const FlightSchema = new Schema<IFlightDocument>(
     }],
     crew: [{ type: Schema.Types.ObjectId, ref: "Crew" }],
     isActive: { type: Boolean, default: true },
+    liveTracking: {
+      latitude: Number,
+      longitude: Number,
+      altitude: Number,
+      speed: Number,
+      heading: Number,
+      lastUpdated: Date,
+    },
   },
   { timestamps: true }
 );

@@ -4,6 +4,7 @@ import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 import Flight from "@/models/Flight";
 import User from "@/models/User";
+import { processRefund, isStripeConfigured } from "@/services/stripe";
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,6 +48,27 @@ export async function POST(req: NextRequest) {
       await user.save();
     }
 
+    // Process Stripe refund if applicable
+    let refundResult: any = null;
+    if (isStripeConfigured() && booking.payment.stripePaymentIntentId && booking.payment.status === "completed") {
+      try {
+        const refund = await processRefund(
+          booking.payment.stripePaymentIntentId,
+          undefined, // full refund
+          "requested_by_customer",
+        );
+        refundResult = {
+          refundId: refund.id,
+          amount: refund.amount / 100,
+          status: refund.status,
+        };
+        console.log("[Cancel] Stripe refund processed:", refund.id);
+      } catch (stripeErr: any) {
+        console.error("[Cancel] Stripe refund failed:", stripeErr.message);
+        // Continue with cancellation even if refund fails
+      }
+    }
+
     // Update booking
     booking.status = "cancelled";
     booking.cancellationReason = reason || "Cancelled by user";
@@ -54,7 +76,13 @@ export async function POST(req: NextRequest) {
     booking.payment.status = "refunded";
     await booking.save();
 
-    return NextResponse.json({ success: true, data: { booking }, message: "Booking cancelled and refund initiated" });
+    return NextResponse.json({
+      success: true,
+      data: { booking, refund: refundResult },
+      message: refundResult
+        ? `Booking cancelled and refund of $${refundResult.amount} processed`
+        : "Booking cancelled and refund initiated",
+    });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: "Cancellation failed" }, { status: 500 });
   }
