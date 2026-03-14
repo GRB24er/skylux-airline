@@ -83,7 +83,9 @@ export async function POST(req: NextRequest) {
     // ══════════════════════════════════════════════════════════
     // ROUTE 1: Duffel real flight booking
     // ══════════════════════════════════════════════════════════
-    const realOffer = duffelOffer || amadeusOffer; // support both field names
+    // Detect Duffel offer from explicit field OR from flightIds containing a duffel ID
+    const duffelIdFromFlights = flightIds?.find((id: string) => typeof id === "string" && id.startsWith("duffel_"));
+    const realOffer = duffelOffer || amadeusOffer || duffelIdFromFlights; // support all sources
     if (realOffer && isDuffelConfigured()) {
       console.log("[Booking] Duffel real flight booking");
 
@@ -341,6 +343,7 @@ export async function POST(req: NextRequest) {
     const generatedIds: string[] = [];
     for (const id of flightIds) {
       if (typeof id === "string" && id.startsWith("gen_")) generatedIds.push(id);
+      else if (typeof id === "string" && id.startsWith("duffel_")) continue; // skip — handled by Route 1
       else realIds.push(id);
     }
 
