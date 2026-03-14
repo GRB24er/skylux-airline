@@ -89,13 +89,28 @@ export async function POST(req: NextRequest) {
     if (realOffer && isDuffelConfigured()) {
       console.log("[Booking] Duffel real flight booking");
 
-      // Refresh offer to get latest price
-      const offerId = realOffer.id || realOffer;
-      const refreshedOffer = await getOffer(typeof offerId === "string" ? offerId : offerId);
-      const activeOffer = refreshedOffer || (typeof realOffer === "object" ? realOffer : null);
+      // Try to refresh offer for latest price; fall back to cached offer data from frontend
+      const offerId = typeof realOffer === "string" ? realOffer : (realOffer.id || realOffer);
+      let activeOffer: any = null;
+
+      try {
+        activeOffer = await getOffer(typeof offerId === "string" ? offerId : offerId);
+      } catch (refreshErr) {
+        console.warn("[Booking] Offer refresh failed (may be expired), using cached data:", refreshErr);
+      }
+
+      // Fall back to the full offer object sent from the frontend
+      if (!activeOffer && typeof realOffer === "object" && realOffer.total_amount) {
+        activeOffer = realOffer;
+        console.log("[Booking] Using cached offer data from frontend");
+      }
 
       if (!activeOffer) {
-        return NextResponse.json({ success: false, error: "Flight offer expired or not found" }, { status: 400 });
+        return NextResponse.json({
+          success: false,
+          error: "Flight offer expired. Please search again and rebook.",
+          code: "OFFER_EXPIRED",
+        }, { status: 400 });
       }
 
       const totalPrice = parseFloat(activeOffer.total_amount);
