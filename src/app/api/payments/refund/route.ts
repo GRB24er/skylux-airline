@@ -4,6 +4,8 @@ import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 import { processRefund, isStripeConfigured } from "@/services/stripe";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Process Stripe Refund
    POST /api/payments/refund

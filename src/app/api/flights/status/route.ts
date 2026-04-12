@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getFlightStatus, isAviationStackConfigured, mapFlightStatus } from "@/services/aviationstack";
 import { searchFlights, isDuffelConfigured } from "@/services/duffel";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Flight Status — Check real-time status of any flight
    GET /api/flights/status?flight=BA115&date=2026-03-12

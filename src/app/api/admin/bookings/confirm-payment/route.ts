@@ -6,6 +6,8 @@ import User from "@/models/User";
 import { sendEmail, bookingConfirmationEmail } from "@/services/email";
 import Flight from "@/models/Flight";
 import Aircraft from "@/models/Aircraft";
+
+export const dynamic = "force-dynamic";
 const _f = Flight; const _a = Aircraft;
 
 export async function POST(req: NextRequest) {

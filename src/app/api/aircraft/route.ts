@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import Aircraft from "@/models/Aircraft";
 import { authorizeRoles } from "@/middleware/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     await connectDB();

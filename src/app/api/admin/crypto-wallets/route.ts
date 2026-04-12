@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import CryptoWallet from "@/models/CryptoWallet";
 import jwt from "jsonwebtoken";
 
+export const dynamic = "force-dynamic";
+
 function getAdmin(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) return null;

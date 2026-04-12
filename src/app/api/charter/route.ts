@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import Flight from "@/models/Flight";
 import Aircraft from "@/models/Aircraft";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     await connectDB();

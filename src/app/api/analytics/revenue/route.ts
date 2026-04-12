@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import { authorizeRoles } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const authResult = await authorizeRoles(req, ["admin", "superadmin"]);

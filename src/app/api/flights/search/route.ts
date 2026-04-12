@@ -6,6 +6,8 @@ import { AP, TZ, distanceNM } from "@/data/airports";
 import { searchFlights as duffelSearch, isDuffelConfigured, parseDuration, mapCabinClass, type DuffelOffer } from "@/services/duffel";
 import { carrierToDisplay, SKYLUX_IATA } from "@/config/airlines";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    SKYLUX Flight Search — Real Airlines + Fallback Generation
    1. Duffel API (real flights from 300+ airlines)

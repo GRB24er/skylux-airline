@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchAirports as searchLocalAirports } from "@/data/airports";
 import { searchAirports as duffelSearchAirports, isDuffelConfigured } from "@/services/duffel";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Airport Search / Autocomplete
    GET /api/airports/search?q=lon&limit=10

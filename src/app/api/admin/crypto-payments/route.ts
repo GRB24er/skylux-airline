@@ -4,6 +4,8 @@ import CryptoPayment from "@/models/CryptoPayment";
 import Notification from "@/models/Notification";
 import jwt from "jsonwebtoken";
 
+export const dynamic = "force-dynamic";
+
 function getAdmin(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) return null;

@@ -4,6 +4,8 @@ import { authenticateUser } from "@/middleware/auth";
 import { sendEmail, bookingConfirmationEmail, eTicketEmail } from "@/services/email";
 import Booking from "@/models/Booking";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const authResult = await authenticateUser(req);

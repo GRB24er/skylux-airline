@@ -6,6 +6,8 @@ import { constructWebhookEvent, getBookingRefFromEvent, getPaymentIntentIdFromEv
 import { sendEmail, bookingConfirmationEmail } from "@/services/email";
 import { calculatePointsEarned } from "@/utils/helpers";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Stripe Webhook Handler
    POST /api/payments/webhook
