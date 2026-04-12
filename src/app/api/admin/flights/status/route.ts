@@ -4,6 +4,8 @@ import { authenticateUser } from "@/middleware/auth";
 import Flight from "@/models/Flight";
 import Booking from "@/models/Booking";
 import { sendEmail } from "@/services/email";
+
+export const dynamic = "force-dynamic";
 const _f = Flight;
 const BASE = process.env.NEXT_PUBLIC_APP_URL || "https://skylux.pro";
 

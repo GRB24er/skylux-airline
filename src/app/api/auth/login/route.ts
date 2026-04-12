@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import User from "@/models/User";
 import { generateToken } from "@/middleware/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();

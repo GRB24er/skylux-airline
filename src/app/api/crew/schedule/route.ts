@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import Crew from "@/models/Crew";
 import { authenticateUser } from "@/middleware/auth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const authResult = await authenticateUser(req);

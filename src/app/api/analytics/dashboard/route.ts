@@ -7,6 +7,8 @@ import User from "@/models/User";
 import Aircraft from "@/models/Aircraft";
 import { getDateRange } from "@/utils/helpers";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const authResult = await authorizeRoles(req, ["admin", "superadmin"]);

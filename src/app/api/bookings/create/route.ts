@@ -12,6 +12,8 @@ import { getOffer, createBooking as duffelCreateBooking, isDuffelConfigured, par
 import { createPaymentIntent, isStripeConfigured } from "@/services/stripe";
 import { SKYLUX_IATA, carrierToDisplay } from "@/config/airlines";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Booking Create — Supports real Amadeus flights + Stripe payments
    - Amadeus flights: Creates real PNR via GDS

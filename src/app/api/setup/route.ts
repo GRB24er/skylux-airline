@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/database";
 import User from "@/models/User";
 
+export const dynamic = "force-dynamic";
+
 // POST /api/setup — Creates the first admin account
 // Only works if zero admin/superadmin users exist in the database
 export async function POST(req: NextRequest) {

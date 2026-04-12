@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/database";
 import { authenticateUser } from "@/middleware/auth";
 import Flight from "@/models/Flight";
 import Aircraft from "@/models/Aircraft";
+
+export const dynamic = "force-dynamic";
 const _f = Flight; const _a = Aircraft;
 
 export async function POST(req: NextRequest) {

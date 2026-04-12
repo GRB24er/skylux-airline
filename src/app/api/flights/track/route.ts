@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { trackFlight, isAviationStackConfigured } from "@/services/aviationstack";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Live Flight Tracking — Real-time position data
    GET /api/flights/track?flight=BA115

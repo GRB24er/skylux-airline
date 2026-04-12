@@ -6,6 +6,8 @@ import Flight from "@/models/Flight";
 import User from "@/models/User";
 import { processRefund, isStripeConfigured } from "@/services/stripe";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const authResult = await authenticateUser(req);

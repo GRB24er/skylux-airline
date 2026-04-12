@@ -4,6 +4,8 @@ import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 import "@/models/Aircraft";
 
+export const dynamic = "force-dynamic";
+
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { sendEmail } from "@/services/email";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const result = await sendEmail({

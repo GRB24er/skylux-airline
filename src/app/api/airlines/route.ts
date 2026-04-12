@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { PARTNER_AIRLINES, SKYLUX_NAME, SKYLUX_IATA, SKYLUX_ICAO, getCodesharePartners } from "@/config/airlines";
 import { getAirlineInfo, isAviationStackConfigured } from "@/services/aviationstack";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Airlines — List SKYLUX + partner airlines with real data
    GET /api/airlines                     — List all

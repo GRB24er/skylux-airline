@@ -4,6 +4,8 @@ import Flight from "@/models/Flight";
 import { authorizeRoles } from "@/middleware/auth";
 import "@/models/Aircraft";
 
+export const dynamic = "force-dynamic";
+
 
 // GET all flights (admin)
 export async function GET(req: NextRequest) {

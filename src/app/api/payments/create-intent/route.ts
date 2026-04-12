@@ -4,6 +4,8 @@ import { authenticateUser } from "@/middleware/auth";
 import Booking from "@/models/Booking";
 import { createPaymentIntent, isStripeConfigured } from "@/services/stripe";
 
+export const dynamic = "force-dynamic";
+
 /* ═════════════════════════════════════════════════════════════════
    Create Stripe PaymentIntent for a pending booking
    POST /api/payments/create-intent
