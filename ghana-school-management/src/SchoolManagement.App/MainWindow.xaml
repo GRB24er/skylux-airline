@@ -1,0 +1,22 @@
+<Window
+    x:Class="SchoolManagement.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Ghana School Management System">
+
+    <NavigationView x:Name="NavView" PaneDisplayMode="Left" IsSettingsVisible="True"
+                    SelectionChanged="NavView_SelectionChanged">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Dashboard" Tag="dashboard" Icon="Home" />
+            <NavigationViewItem Content="Students" Tag="students" Icon="People" />
+            <NavigationViewItem Content="Attendance" Tag="attendance" Icon="Accept" />
+            <NavigationViewItem Content="Exams" Tag="exams" Icon="Edit" />
+            <NavigationViewItem Content="Grades &amp; Reports" Tag="grades" Icon="Library" />
+            <NavigationViewItem Content="Scheme of Work" Tag="sow" Icon="Calendar" />
+            <NavigationViewItem Content="Fees" Tag="fees" Icon="Shop" />
+            <NavigationViewItem Content="Staff" Tag="staff" Icon="Contact" />
+        </NavigationView.MenuItems>
+
+        <Frame x:Name="ContentFrame" />
+    </NavigationView>
+</Window>
